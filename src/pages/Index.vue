@@ -1,11 +1,6 @@
 <template>
-    <div id="index">
-        <!--<router-link to="/add" id="float">
-            <v-btn floating class="indigo">
-                <v-icon light>mode_edit</v-icon>
-            </v-btn>
-        </router-link>-->
-        <slide v-for="slide in slides" :key="slide._id" :slide="slide" @clicked="slideClicked"></slide>
+    <div>
+        <slide v-for="slide in slides" :key="slide.id" :slide="slide" @clicked="slideClicked(slide.id)"></slide>
     </div>
 </template>
 
@@ -21,11 +16,11 @@ export default {
         }
     },
     created: function () {
-        /*let slides = this.$store.state.slide.items;
+        let slides = this.$store.state.slide.items;
         if (slides.length < 1) {
-            this.$store.dispatch('GET_SLIDES');
-        }*/
-        this.$socket.emit('slides', this.$store.state.user.userName);
+            this.$socket.emit('getSlides', { userName: this.$store.state.user.userName });
+        }
+
     },
     computed: {
         slides() {
@@ -36,9 +31,9 @@ export default {
         Slide
     },
     methods: {
-        slideClicked: function (_id) {
+        slideClicked: function (id) {
             this.$router.push({
-                path: `/comments/${_id}`
+                path: `/comments/${id}`
             })
         }
     }

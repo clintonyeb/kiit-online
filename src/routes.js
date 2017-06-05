@@ -11,8 +11,27 @@ function loadComponent(component) {
   return () => System.import(`./components/${component}.vue`);
 }
 
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) return savedPosition;
+  const position = {};
+  if (to.hash) {
+    position.selector = to.hash;
+  }
+  if (to.matched.some(m => m.meta.scrollToTop)) {
+    position.x = 0;
+    position.y = 0;
+  }
+  if (to.name !== 'chat') {
+    position.x = 0;
+    position.y = 0;
+  }
+  return position;
+};
+
 export default new VueRouter({
   mode: 'history',
+  scrollBehavior,
+  base: __dirname,
   routes: [
     {
       path: '/',
@@ -81,6 +100,7 @@ export default new VueRouter({
         default: loadPage('Comment'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
+        chatInput: loadComponent('ChatInput'),
       },
       props: true,
     },

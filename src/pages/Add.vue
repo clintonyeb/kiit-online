@@ -127,10 +127,13 @@ export default {
                         let payload = {
                             title: this.title,
                             documents: documents,
-                            content: this.content
+                            content: this.content,
+                            userName: this.$store.state.user.userName
                         }
 
-                        sendSlide(payload, (err, res) => {
+                        this.$socket.emit('addSlide', payload);
+                        return this.clearLoading('', false);
+                        /*sendSlide(payload, (err, res) => {
                             if (err) {
                                 console.log(err);
                                 return this.clearLoading('Error submitting slide');
@@ -138,7 +141,7 @@ export default {
 
                             // slide sent, now go home
                             return this.navigateToHome();
-                        })
+                        })*/
 
                     } else {
                         return this.clearLoading('Error uploading some files');
@@ -153,10 +156,10 @@ export default {
             this.$refs.card.classList.add('faded-content');
         },
 
-        clearLoading(message) {
+        clearLoading(message, snack = true) {
             this.loading = false;
             this.snackbar.text = message;
-            this.snackbar.visibility = true;
+            this.snackbar.visibility = snack;
             this.progress = false;
             this.$refs.card.classList.remove('faded-content');
             this.submitBtn = 'Retry';

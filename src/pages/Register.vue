@@ -115,7 +115,7 @@ export default {
                         } else {
                             this.alert.shown = false;
                             this.$store.commit('SET_ROLL', roll);
-                            this.$store.commit('SET_NAME', res.fullName);
+                            this.$store.commit('SET_REG', res);
                         }
                     })
                     break;
@@ -144,7 +144,9 @@ export default {
                         userName: reg.userName,
                         fullName: reg.fullName,
                         password: reg.password,
-                        email: reg.email
+                        email: reg.email,
+                        class: reg.class,
+                        year: reg.year,
                     }
                     postAccountDetails(data, (err, res) => {
                         if (err) {

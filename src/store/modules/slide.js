@@ -1,6 +1,6 @@
 import { getSlides } from '../api';
 
-/*let slide: {
+/* let slide: {
     document: String,
     content: String,
     preview: String,
@@ -19,31 +19,31 @@ import { getSlides } from '../api';
 }*/
 
 const state = {
-    items: []
-}
+  items: [],
+};
 
 const actions = {
-    GET_SLIDES({ commit }) {
-        getSlides((err, data) => {
-            console.log(data);
-            if (err || !data) return;
-            commit('SLIDES_GET', data);
-        })
-    }
-}
+  /*GET_SLIDES({ commit }) {
+    getSlides((err, data) => {
+      console.log(data);
+      if (err || !data) return;
+      commit('SLIDES_GET', data);
+    });
+  },*/
+};
 
 const mutations = {
-    SLIDES_GET(state, payload) {
-        state.items = payload;
-        /*payload.map((slide) => {
-            state.items.push(slide);
-        })*/
-    }
-}
+  SOCKET_SLIDESGET(state, payload) {
+    state.items = payload;
+  },
+  SOCKET_SLIDEGET(state, post) {
+    state.items.push(post);
+  },
+};
 
 
 export default {
-    state,
-    mutations,
-    actions
-}
+  state,
+  mutations,
+  actions,
+};

@@ -13,7 +13,7 @@
             </span>
             <v-spacer></v-spacer>
             <v-icon class="accent--text">person</v-icon>
-            <span class="" id="user">{{slide.user.name}}</span>
+            <span class="" id="user">{{slide.userName}}</span>
         </v-card-row>
     </v-card>
 </template>
@@ -30,16 +30,16 @@ export default {
     },
     computed: {
         date: function () {
-            return moment(this.slide.dateCreated).fromNow()
+            return moment(new Date(Number(this.slide.time))).fromNow()
         },
         comments: function () {
-            switch (this.slide.comments.length) {
+            switch (this.slide.comments) {
                 case 0:
                     return 'No comments'
                 case 1:
                     return '1 comment'
                 default:
-                    return `${this.slide.comments.length} comments`
+                    return 'No comments'
             }
         }
     }
@@ -52,34 +52,34 @@ export default {
     max-width: 700px;
 }
 
-#slide .card {
+.card {
     margin-bottom: 5px;
 }
 
-#slide .header {
+.header {
     padding: 10px;
 }
 
-#slide .title {
+.title {
     font-weight: bolder;
     text-shadow: 1px 1px 3px #000;
 }
 
-#slide .date {
+.date {
     font-size: .9rem;
     font-style: italic;
 }
 
-#slide #user:hover {
+#user:hover {
     color: #000;
 }
 
-#slide .comments {
+.comments {
     margin-left: 5px;
     border-bottom: 1px solid #03A9F4;
 }
 
-#slide #user {
+#user {
     border-bottom: 1px solid #03A9F4;
 }
 </style>

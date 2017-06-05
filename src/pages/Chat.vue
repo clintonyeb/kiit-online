@@ -9,7 +9,6 @@
 <script>
 
 import Message from '../components/Message.vue';
-import { Emoji } from 'emoji-mart-vue'
 
 export default {
     name: 'chat',
@@ -22,16 +21,28 @@ export default {
         }
     },
     components: {
-        Message, Emoji
+        Message
     },
     methods: {
+        scrollToBottom: function () {
+            window.scrollTo(0, document.documentElement.scrollHeight);
+        }
     },
     created: function () {
-        /*if (this.$store.state.chat.messages.length < 1) {
-            this.$store.dispatch('GET_CHATS');
-        }*/
+        if (this.chat.length < 1) {
+            this.$socket.emit('getChats', { userName: this.$store.state.user.userName });
+        }
 
-        this.$socket.emit('requestMessages');
+        this.$nextTick(() => {
+            let cont = this.$el ? this.$el.querySelector('#container') : null;
+            if (cont) {
+                let observer = new MutationObserver(this.scrollToBottom);
+                let config = { childList: true };
+                observer.observe(cont, config);
+                this.scrollToBottom();
+            }
+
+        })
     },
     computed: {
         chat: function () {
@@ -40,9 +51,6 @@ export default {
         comment: function () {
             return this.data;
         },
-        focusedInput: function () {
-            return !this.emoji || this.focused
-        }
     }
 }
 </script>

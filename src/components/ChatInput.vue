@@ -71,30 +71,21 @@ export default {
                 return false;
             };
 
-            let _user = this.$store.state.user;
-            if (_user) return false;
-            let user = {
-                _id: _user._id,
-                userName: _user.userName,
-                fullName: _user.fullName
-            };
-
+            let userName = this.$store.state.user.userName;
 
             let data = {
                 content: text,
-                user: user,
-                dateCreated: new Date(),
-                _id: ++this.id
+                userName: userName,
             };
 
-            this.$socket.emit('message', data);
-            this.$store.commit('CHATS_ADD', data);
-            this.data = '';
+            this.$socket.emit('chat', data);
+            this.$store.dispatch('addChat', data);
+            this.$store.commit('CLEAR_CHAT_INPUT');
             this.focused = true;
         },
 
         sendFile: function (files) {
-            
+
         },
         drop(event) {
             this.$store.commit('FILE_HOVERED', false);
@@ -166,6 +157,7 @@ textarea {
     z-index: -5 !important;
     margin-left: -3px;
 }
+
 
 
 
