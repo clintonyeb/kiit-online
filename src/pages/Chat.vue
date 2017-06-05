@@ -25,9 +25,6 @@ export default {
         Message, Emoji
     },
     methods: {
-        scrollToBottom: function () {
-            window.scrollTo(0, document.documentElement.scrollHeight);
-        }
     },
     created: function () {
         /*if (this.$store.state.chat.messages.length < 1) {
@@ -35,17 +32,6 @@ export default {
         }*/
 
         this.$socket.emit('requestMessages');
-
-        this.$nextTick(() => {
-            let cont = this.$el ? this.$el.querySelector('#container') : null;
-            if (cont) {
-                let observer = new MutationObserver(this.scrollToBottom);
-                let config = { childList: true };
-                observer.observe(cont, config);
-                this.scrollToBottom();
-            }
-
-        })
     },
     computed: {
         chat: function () {
