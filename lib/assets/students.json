@@ -1,14 +1,20 @@
 {
     "1639081": {
         "fullName": "Clinton Yeboah",
-        "class": "MCA",
+        "class": "mca",
         "year": 3,
-        "section": "A"
+        "section": "a"
     },
     "11111": {
         "fullName": "Frank Lampard",
-        "class": "MCA",
+        "class": "mca",
         "year": 3,
-        "section": "A"
+        "section": "a"
+    },
+    "22222": {
+        "fullName": "Annie Micheal",
+        "class": "bca",
+        "year": "2",
+        "section": "b"
     }
 }

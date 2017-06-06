@@ -17,7 +17,7 @@
             <v-stepper-content step="0">
                 <v-card flat>
                     <v-card-text>
-                        <v-text-field name="rollNumber" label="University roll number" type="number" required v-model="rollnumber" hint="Please provide your university roll number for verification"></v-text-field>
+                        <v-text-field name="userName" label="University roll number" type="number" required v-model="userName" hint="Please provide your university roll number for verification"></v-text-field>
                     </v-card-text>
                     <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
@@ -60,7 +60,7 @@ export default {
     name: 'register',
     data() {
         return {
-            rollnumber: '',
+            userName: '',
             alert: {
                 shown: false,
                 message: ''
@@ -71,13 +71,13 @@ export default {
     },
     computed: {
         currStep() {
-            return this.$store.state.user.step;
+            return this.user.step;
         },
-        registration() {
-            return this.$store.state.user.registration;
+        user() {
+            return this.$store.state.user;
         },
         name() {
-            let name = this.$store.state.user.registration.name;
+            let name = this.user.fullName;
             return name || '';
         },
         btnText() {
@@ -100,9 +100,9 @@ export default {
             let step = this.currStep;
             switch (step) {
                 case 0:
-                    let roll = this.rollnumber;
-                    if (roll == "" || roll === null) return;
-                    validateRollNumber(roll, (err, res) => {
+                    let userName = this.userName;
+                    if (userName == "" || userName === null) return;
+                    validateRollNumber(userName, (err, res) => {
                         if (err) {
                             if (err.response.status === 409) {
                                 this.alert.message = 'It appears you already have an account';
@@ -114,7 +114,7 @@ export default {
                             this.alert.shown = true;
                         } else {
                             this.alert.shown = false;
-                            this.$store.commit('SET_ROLL', roll);
+                            this.$store.commit('SET_USER_NAME', userName);
                             this.$store.commit('SET_REG', res);
                         }
                     })
@@ -162,7 +162,7 @@ export default {
             }
         },
         bread(index) {
-            let step = this.$store.state.user.step;
+            let step = this.user.step;
             return step !== index;
         }
     }

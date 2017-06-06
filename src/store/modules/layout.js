@@ -8,7 +8,7 @@ const state = {
       { title: 'Profile', icon: 'account_circle', path: '/profile', name: 'profile' },
       { title: 'Settings', icon: 'settings', path: '/settings', name: 'settings' },
       { title: 'Help', icon: 'help', path: '/help', name: 'help' },
-      { title: 'Logout', icon: 'settings_power', path: '/logout', name: 'logout' },
+      { title: 'Logout', icon: 'settings_power', path: '/login', name: 'logout' },
     ],
     mini: false,
     resizeWatcher: true

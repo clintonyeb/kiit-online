@@ -28,28 +28,23 @@ export default {
   },
   created: function () {
     let token = localStorage.getItem('token');
-    let userName = localStorage.getItem('userName');
-    if (!token || !userName) {
-      this.$router.replace('/login');
-    } else {
-      this.$store.commit('SET_TOKEN', { token: token, userName: userName });
-      setInterval(this.setTick, 10000);
-      this.$socket.emit('getUser', {
-        token: this.$store.state.user.token,
-        userName: this.$store.state.user.userName
-      });
+    if (!token) {
+      return this.$router.replace('/login');
     }
-
+    setInterval(this.setTick, 10000);
   },
   computed: {
+    user() {
+      return this.$store.state.user;
+    },
     userName() {
-      return this.$store.state.user.userName;
+      return this.user.userName;
     },
     fullName() {
-      return this.$store.state.user.fullName;
+      return this.user.fullName;
     },
     avatar() {
-      return this.$store.state.user.avatar || '/assets/avatar-default.png'
+      return this.user.avatar || '/assets/avatar-default.png'
     },
     title() {
       let name = this.$route.name;
@@ -78,7 +73,7 @@ export default {
       return this.$store.state.layout.snackbar;
     }
   },
-  sockets: {  
+  sockets: {
     message: function (data) {
       this.$store.commit('CHATS_ADD', data);
     },

@@ -53,10 +53,8 @@ export function authenticate(callback) {
   return get('/authenticate', callback);
 }
 
-export function validateRollNumber(roll, callback) {
-  let data = {
-    rollNumber: roll
-  }
+export function validateRollNumber(userName, callback) {
+  const data = { userName };
   return post('/users/confirmRoll', data, callback);
 }
 
@@ -72,7 +70,7 @@ export function loginUser(payload, cb) {
 function post(url, data, cb) {
   return axios.post(url, data)
     .then(response => cb(null, response.data))
-    .catch(err => cb(err))
+    .catch(err => cb(err));
 }
 
 function get(url, cb) {

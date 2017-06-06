@@ -54,6 +54,9 @@ export default {
             }
         }
     },
+    created: function () {
+      this.$store.commit('REMOVE_TOKEN');  
+    },
     methods: {
         submit() {
             let username = this.username.trim();
