@@ -3,7 +3,7 @@
     <router-view name="sideBar"></router-view>
     <router-view name="toolBar"></router-view>
     <main>
-      <v-container fluid>
+      <v-container fluid class="main-container">
         <router-view></router-view>
       </v-container>
     </main>
@@ -12,6 +12,7 @@
       {{ snackbar.text }}
       <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
     </v-snackbar>
+    <router-view name="footer"></router-view>
   </div>
 </template>
 
@@ -46,29 +47,6 @@ export default {
     avatar() {
       return this.user.avatar || '/assets/avatar-default.png'
     },
-    title() {
-      let name = this.$route.name;
-
-      switch (name) {
-        case 'index':
-        case 'index2':
-          return 'Home';
-        case 'profile':
-          return 'Profile';
-        case 'settings':
-          return 'Settings';
-        case 'terms':
-          return 'Terms and Conditions';
-        case 'add':
-          return 'Add New Slide';
-        case 'chat':
-          return "Chat Room";
-        case 'login':
-          return "Login in Here";
-        default:
-          return '';
-      }
-    },
     snackbar() {
       return this.$store.state.layout.snackbar;
     }
@@ -85,7 +63,15 @@ export default {
     },
     comments: function (data) {
       this.$store.commit('COMMENTS_ADD', data);
-    }
+    },
+    chat(payload) {
+      if (payload.userName == this.userName) {
+        console.log('message sent');
+      } else {
+        this.$store.commit('CHATS_ADD', payload);
+        this.$store.dispatch('CHAT_NOTIFY', payload);
+      }
+    },
   },
   methods: {
     setTick() {

@@ -45,7 +45,7 @@
             </v-stepper-content>
         </v-stepper>
         <div class="page-content">
-            <v-alert warning dismissible v-model="alert.shown">
+            <v-alert error dismissible v-model="alert.shown">
                 {{alert.message}}
             </v-alert>
         </div>
@@ -105,7 +105,7 @@ export default {
                     validateRollNumber(userName, (err, res) => {
                         if (err) {
                             if (err.response.status === 409) {
-                                this.alert.message = 'It appears you already have an account';
+                                this.alert.message = 'It appears you already have an account, please login instead';
                             } else if (err.response.status === 404) {
                                 this.alert.message = 'Could not find your roll number';
                             } else {

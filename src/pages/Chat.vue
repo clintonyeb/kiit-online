@@ -1,6 +1,6 @@
 <template>
     <div id="chat">
-        <div class="ui minimal comments" id="container">
+        <div class="ui comments" id="container">
             <message v-for="mess in chat" :key="mess._id" :mess="mess"></message>
         </div>
     </div>
@@ -29,7 +29,7 @@ export default {
         }
     },
     created: function () {
-        if (this.chat.length < 1) {
+        if (this.chat.length < 20) {
             this.$socket.emit('getChats', { userName: this.$store.state.user.userName });
         }
 
@@ -41,8 +41,9 @@ export default {
                 observer.observe(cont, config);
                 this.scrollToBottom();
             }
-
         })
+
+        this.$store.commit('NOTIFY_REMOVE', 'chat');
     },
     computed: {
         chat: function () {

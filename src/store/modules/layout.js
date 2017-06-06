@@ -11,11 +11,10 @@ const state = {
       { title: 'Logout', icon: 'settings_power', path: '/login', name: 'logout' },
     ],
     mini: false,
-    resizeWatcher: true
+    resizeWatcher: true,
   },
-  toolbar: {
-
-  },
+  toolbar: {},
+  notifications: [],
   snackbar: {
     text: '',
     timeout: 4000,
@@ -25,13 +24,13 @@ const state = {
     bottom: true,
     multiline: true,
     vertical: false,
-    shown: false
+    shown: false,
   },
   chatInput: {
     content: '',
     placeholder: 'Type your message here, you can use also select an emoticon with the left icon, or add a file with the right icon',
     files: [],
-    fileHover: false
+    fileHover: false,
 
   },
   emojiPicker: {
@@ -40,13 +39,19 @@ const state = {
     title: 'pick an emoji',
     emoji: 'grinning',
     color: '#00BCD4',
-    skin: 1
-  }
-}
+    skin: 1,
+  },
+};
 
 const actions = {
-
-}
+  CHAT_NOTIFY({ commit, state, rootState }, payload) {
+    if (rootState.route.name != 'chat') {
+      // play sound
+      payload.type = 'chat';
+      commit('NOTIFY_ADD', payload);
+    }
+  },
+};
 
 const mutations = {
   TOGGLE_DRAWER(state) {
@@ -54,6 +59,14 @@ const mutations = {
   },
   CHAT_CONTENT(state, data) {
     state.chatInput.content = data;
+  },
+  REPLY_USER({ commit }, userName) {
+    let content = state.chatInput.content;
+    let reg = new RegExp(`@${userName}`);
+    if (!reg.test(content)) {
+      content = `@${userName} ${content}`;
+    }
+    state.chatInput.content = content;
   },
   TOGGLE_PICKER(state, b) {
     if (b === undefined) {
@@ -65,7 +78,7 @@ const mutations = {
   FILE_HOVERED(state, b) {
     state.chatInput.fileHover = b;
   },
-  SOCKET_USERSTATUS: function (state, data) {
+  SOCKET_USERSTATUS(state, data) {
     state.snackbar.text = data;
     state.snackbar.shown = true;
   },
@@ -75,12 +88,18 @@ const mutations = {
   },
   CLEAR_CHAT_INPUT(state) {
     state.chatInput.content = '';
-  }
-}
+  },
+  NOTIFY_ADD(state, payload) {
+    state.notifications.push(payload);
+  },
+  NOTIFY_REMOVE(state, payload) {
+    state.notifications = state.notifications.filter(item => item.type !== payload);
+  },
+};
 
 
 export default {
   state,
   mutations,
-  actions
-}
+  actions,
+};

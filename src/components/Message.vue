@@ -3,16 +3,13 @@
         <a class="avatar">
             <img :src="mess.user.avatar || '/assets/avatar-default.png'" />
         </a>
-        <div class="content">
+        <div class="content" @click="messageClicked">
             <a class="author" :title="mess.user.userName">{{mess.user.fullName}}</a>
             <div class="metadata">
                 <span class="date"> &middot; {{date}}</span>
             </div>
             <div class="text">
                 {{mess.content}}
-            </div>
-            <div class="actions">
-                <a class="reply">Reply</a>
             </div>
         </div>
     </div>
@@ -33,8 +30,19 @@ export default {
     computed: {
         date: function () {
             let tick = this.$store.state.chat.tick;
-            return tick && moment(this.mess.dateCreated).fromNow()
+            return tick && moment(new Date(Number(this.mess.time))).fromNow()
+        },
+        content: function () {
+
         }
+    },
+    methods: {
+        parseEmoji(text) {
+
+        },
+        messageClicked: function () {
+            this.$store.commit('REPLY_USER', this.mess.user.userName);
+        },
     }
 }
 </script>
@@ -45,6 +53,10 @@ export default {
     padding-left: 10px;
     position: relative;
     bottom: 10px;
+}
+
+.content {
+    cursor: pointer;
 }
 </style>
 

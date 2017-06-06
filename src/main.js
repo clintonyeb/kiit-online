@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import Vuetify from 'vuetify';
+import { sync } from 'vuex-router-sync'
 import store from './store';
 import router from './routes';
 import VueSocketIO from 'vue-socket.io';
@@ -12,6 +13,8 @@ if (!token) {
 
 Vue.use(VueSocketIO, `0.0.0.0:8000?token=${token}`, store);
 Vue.use(Vuetify);
+
+sync(store, router);
 
 const vm = new Vue({
   el: '#app',

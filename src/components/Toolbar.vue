@@ -8,12 +8,22 @@
                 <v-icon>add</v-icon>
             </v-btn>
         </router-link>
-        <v-btn icon light title="Notifications">
-            <v-icon>notifications_none</v-icon>
-            <sup>
-                <strong>0</strong>
-            </sup>
-        </v-btn>
+        <v-menu top left offset-y>
+            <v-btn icon light title="Notifications" slot="activator">
+                <v-icon>notifications_none</v-icon>
+                <sup>
+                    <strong>{{notifies}}</strong>
+                </sup>
+            </v-btn>
+            <v-list>
+                <v-list-item v-for="item in [1, 2, 3]" :key="item">
+                    <v-list-tile>
+                        <v-list-tile-title>{{ item }}</v-list-tile-title>
+                    </v-list-tile>
+                </v-list-item>
+            </v-list>
+        </v-menu>
+    
     </v-toolbar>
 </template>
 
@@ -48,7 +58,13 @@ export default {
                 default:
                     return '';
             }
-        }
+        },
+        notifies() {
+            return this.notifications.length;
+        },
+        notifications() {
+            return this.$store.state.layout.notifications;
+        },
     }
 }
 </script>

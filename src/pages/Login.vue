@@ -26,15 +26,10 @@
             </v-card-text>
         </v-card>
         <div class="page-content">
-            <v-alert warning dismissible v-model="alert.shown">
+            <v-alert error dismissible v-model="alert.shown">
                 {{alert.message}}
             </v-alert>
         </div>
-    
-        <v-footer class="pa-3 footer">
-            <v-spacer></v-spacer>
-            <div>© KIIT University</div>
-        </v-footer>
     </div>
 </template>
 
@@ -55,7 +50,7 @@ export default {
         }
     },
     created: function () {
-      this.$store.commit('REMOVE_TOKEN');  
+        this.$store.commit('REMOVE_TOKEN');
     },
     methods: {
         submit() {
@@ -83,12 +78,6 @@ export default {
 </script>
 
 <style scoped>
-.footer {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
 .login-cont,
 .page-content {
     width: 90%;
