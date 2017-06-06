@@ -70,7 +70,8 @@ export default {
                     }
 
                     this.$store.commit('STORE_TOKEN', res);
-                    this.$router.replace('/');
+                    // this.$router.replace('/');
+                    window.location.replace('/');
                 })
             }
         }
@@ -85,7 +86,8 @@ export default {
     right: 0;
 }
 
-.login-cont, .page-content {
+.login-cont,
+.page-content {
     width: 90%;
     max-width: 700px;
     margin: 0 auto;

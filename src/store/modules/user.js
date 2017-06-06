@@ -59,8 +59,6 @@ const mutations = {
   },
   SOCKET_USERGET(state, payload) {
     if (payload === 'err') {
-      console.log('authentication error');
-      console.log(location.pathname);
       if (location.pathname != '/login') {
         location.replace('/login');
       }
@@ -72,6 +70,15 @@ const mutations = {
   SOCKET_CONNECT(state) {
     console.log('socket connected');
   },
+  SOCKET_AUTH(state, payload) {
+    if (payload == '401') {
+      if (location.pathname != '/login') {
+        location.replace('/login');
+      }
+    } else {
+      console.log('authentication success', payload);
+    }
+  }
 };
 
 

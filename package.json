@@ -8,7 +8,8 @@
   "scripts": {
     "vue-build": "cross-env NODE_ENV=development webpack --hide-modules --colors --watch",
     "node-build": "nodemon --delay 30 -e js,html,css lib/index.js",
-    "dev": "concurrently --kill-others \"yarn run vue-build\" \"nodemon lib/index.js\" "
+    "dev": "concurrently --kill-others \"yarn run vue-build\" \"nodemon lib/index.js\" ",
+    "test": "lab"
   },
   "dependencies": {
     "aguid": "^2.0.0",
@@ -23,10 +24,10 @@
     "good-squeeze": "^5.0.2",
     "hapi": "^16.3.0",
     "inert": "^4.2.0",
-    "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "redis": "^2.7.1",
     "socket.io": "^2.0.2",
+    "socket.io-client": "^2.0.2",
     "vue": "^2.3.3",
     "vue-router": "^2.5.3",
     "vue-socket.io": "^2.1.1-a",
@@ -36,6 +37,7 @@
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-preset-env": "^1.5.1",
+    "code": "^4.0.0",
     "concurrently": "^3.4.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
@@ -44,12 +46,13 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0",
     "file-loader": "^0.9.0",
+    "lab": "^13.1.0",
     "nodemon": "^1.11.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-loader": "^12.1.0",
     "vue-template-compiler": "^2.3.3",
-    "vuetify": "^0.12.6",
+    "vuetify": "^0.12.7",
     "webpack": "^2.6.1"
   }
 }
