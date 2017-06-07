@@ -11,9 +11,7 @@ import Slide from '../components/Slide.vue';
 export default {
     name: 'index',
     data() {
-        return {
-            message: 'Home'
-        }
+        return {}
     },
     created: function () {
         let slides = this.$store.state.slide.items;

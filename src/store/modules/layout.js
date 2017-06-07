@@ -90,7 +90,9 @@ const mutations = {
     state.chatInput.content = '';
   },
   NOTIFY_ADD(state, payload) {
+    let snd = new Audio('/assets/all-eyes-on-me.mp3');
     state.notifications.push(payload);
+    snd.play();
   },
   NOTIFY_REMOVE(state, payload) {
     state.notifications = state.notifications.filter(item => item.type !== payload);

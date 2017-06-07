@@ -2,28 +2,19 @@
     <v-toolbar fixed class="primary darken-4" id="toolbar">
         <v-toolbar-side-icon light @click.native.stop="$store.commit('TOGGLE_DRAWER')"></v-toolbar-side-icon>
         <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <router-link to="/add" v-if="title != 'Add New Slide'">
-            <v-btn icon light title="Create a slide">
-                <v-icon>add</v-icon>
-            </v-btn>
-        </router-link>
-        <v-menu top left offset-y>
-            <v-btn icon light title="Notifications" slot="activator">
+        <toolbar-items>
+            <router-link to="/add" v-if="title != 'Add New Slide'">
+                <v-btn icon light v-tooltip:left="{ html: 'Create a slide' }">
+                    <v-icon>add</v-icon>
+                </v-btn>
+            </router-link>
+            <v-btn icon light v-tooltip:left="{html: 'View notifications'}" slot="activator">
                 <v-icon>notifications_none</v-icon>
                 <sup>
                     <strong>{{notifies}}</strong>
                 </sup>
             </v-btn>
-            <v-list>
-                <v-list-item v-for="item in [1, 2, 3]" :key="item">
-                    <v-list-tile>
-                        <v-list-tile-title>{{ item }}</v-list-tile-title>
-                    </v-list-tile>
-                </v-list-item>
-            </v-list>
-        </v-menu>
-    
+        </toolbar-items>
     </v-toolbar>
 </template>
 

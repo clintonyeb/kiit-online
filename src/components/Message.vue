@@ -4,9 +4,10 @@
             <img :src="mess.user.avatar || '/assets/avatar-default.png'" />
         </a>
         <div class="content" @click="messageClicked">
-            <a class="author" :title="mess.user.userName">{{mess.user.fullName}}</a>
+            <a class="author" v-tooltip:right="{html: mess.user.userName}">{{mess.user.fullName}}</a>
             <div class="metadata">
-                <span class="date"> &middot; {{date}}</span>
+                <v-icon dark>bubble_chart</v-icon>
+                <timeago :since="date" class="date" :auto-update="60"></timeago>
             </div>
             <div class="text">
                 {{mess.content}}
@@ -17,24 +18,17 @@
 
 <script>
 
-import * as moment from 'moment';
-
-
 export default {
     props: ['mess'],
     name: 'message',
     data() {
-        return {
-        }
+        return {}
     },
     computed: {
-        date: function () {
-            let tick = this.$store.state.chat.tick;
-            return tick && moment(new Date(Number(this.mess.time))).fromNow()
+        date() {
+            let time = this.mess.time;
+            return new Date(Number(time));
         },
-        content: function () {
-
-        }
     },
     methods: {
         parseEmoji(text) {

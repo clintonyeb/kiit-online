@@ -5,14 +5,14 @@
     
         <picker :title="picker.title" :skin="picker.skin" :color="picker.color" :sheetSize="picker.sheetSize" v-show="picker.shown" @click="emojiSelected" :emoji="picker.emoji" class="emoji"></picker>
     
-        <v-btn class="emoji-picker" icon :class="{ 'primary--text': picker.shown }" @click.native="$store.commit('TOGGLE_PICKER')" title="Insert emoticon">
+        <v-btn class="emoji-picker" icon :class="{ 'primary--text': picker.shown }" @click.native="$store.commit('TOGGLE_PICKER')" v-tooltip:right="{html: 'Insert emoticon'}">
             <v-icon light>insert_emoticon</v-icon>
         </v-btn>
     
-        <textarea rows="3" cols="100%" v-model="text" autofocus :placeholder="chatInput.placeholder" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)">
+        <textarea rows="3" cols="100%" v-model="text" autofocus :placeholder="chatInput.placeholder" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)" v-focus>
         </textarea>
     
-        <v-btn icon class="send-btn" :title="content ? 'Send message' : 'Attach file'" @click.native="attachBtnClicked($event)">
+        <v-btn icon class="send-btn" v-tooltip:left="{html: content ? 'Send message' : 'Attach file(s)'}" @click.native="attachBtnClicked($event)">
             <v-icon light>{{content ? 'send' : 'attach_file'}}</v-icon>
         </v-btn>
     </v-toolbar>
@@ -76,6 +76,7 @@ export default {
             let data = {
                 content: text,
                 userName: userName,
+                time: new Date().getTime(),
             };
 
             this.$socket.emit('chat', data);
@@ -157,6 +158,10 @@ textarea {
     z-index: -5 !important;
     margin-left: -3px;
 }
+
+
+
+
 
 
 

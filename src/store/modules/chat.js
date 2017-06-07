@@ -2,8 +2,7 @@
 
 const state = {
   messages: [],
-  tick: 1,
-  id: '',
+  loading: false,
 };
 
 const actions = {
@@ -14,21 +13,26 @@ const actions = {
   },
 };
 
+
 const mutations = {
-  CHATS_GET(state, payload) {
-    state.messages = payload;
-  },
   CHATS_ADD(state, payload) {
     state.messages = addChat(state.messages, payload);
   },
-  TICK(state) {
-    if (state.tick > 1000) {
-      state.tick = 1;
-    }
-    state.tick++;
-  },
   SOCKET_CHATGET(state, payload) {
+    setTimeout(() => {
+      state.loading = false;
+    }, 2000);
+
+    if (payload === 'err') {
+      return;
+    }
+    if (payload === 'done') {
+      return;
+    }
     state.messages = addChat(state.messages, payload);
+  },
+  START_LOADING(state, bool = true) {
+    state.loading = bool;
   },
 };
 
@@ -40,6 +44,12 @@ export default {
 };
 
 function compare(a, b) {
+  if (!a.time) {
+    return 1;
+  }
+  if (!b.time) {
+    return -1;
+  }
   if (a.time < b.time) {
     return -1;
   } else if (a.time > b.time) {

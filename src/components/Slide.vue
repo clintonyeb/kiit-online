@@ -3,7 +3,8 @@
         <v-card-row class="primary darken-1 header">
             <span class="white--text title">{{slide.title}}</span>
             <v-spacer></v-spacer>
-            <span class="white--text date">{{date}}</span>
+            &middot;
+            <timeago :since="mess.time" class="date"></timeago>
         </v-card-row>
         <v-card-row img="/assets/images/flower.jpg" height="200px"></v-card-row>
         <v-card-row actions class="grey lighten-1 mt-0 dark--text">
@@ -20,8 +21,6 @@
 
 <script>
 
-import * as moment from 'moment';
-
 export default {
     props: ['slide'],
     name: 'slide',
@@ -29,9 +28,6 @@ export default {
         return {}
     },
     computed: {
-        date: function () {
-            return moment(new Date(Number(this.slide.time))).fromNow()
-        },
         comments: function () {
             switch (this.slide.comments) {
                 case 0:

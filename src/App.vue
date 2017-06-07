@@ -32,7 +32,6 @@ export default {
     if (!token) {
       return this.$router.replace('/login');
     }
-    setInterval(this.setTick, 10000);
   },
   computed: {
     user() {
@@ -72,10 +71,10 @@ export default {
         this.$store.dispatch('CHAT_NOTIFY', payload);
       }
     },
-  },
-  methods: {
-    setTick() {
-      this.$store.commit('TICK');
+    auth(payload) {
+      if (payload == 401) {
+        return this.$router.replace('/login');
+      }
     }
   }
 }
