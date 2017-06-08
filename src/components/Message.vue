@@ -52,5 +52,9 @@ export default {
 .content {
     cursor: pointer;
 }
+
+#comment {
+    flex: 1;
+}
 </style>
 

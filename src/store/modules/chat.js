@@ -16,7 +16,7 @@ const actions = {
 
 const mutations = {
   CHATS_ADD(state, payload) {
-    state.messages.push(payload);
+    state.messages.unshift(payload);
   },
   SOCKET_CHATGET(state, payload) {
     setTimeout(() => {

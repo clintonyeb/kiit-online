@@ -27,8 +27,8 @@ export default {
     },
     mounted: function () {
         this.$nextTick(() => {
-            document.body.style.overflow = 'hidden';
             this.container = this.$refs['chat'];
+            this.conta
         });
 
         if (this.chat.length < 20) {
@@ -55,9 +55,6 @@ export default {
             return this.$store.state.chat.loading;
         },
     },
-    destroyed() {
-        document.body.style.overflow = 'auto';
-    },
 }
 </script>
 
@@ -71,12 +68,11 @@ export default {
 }
 
 #chat {
-    overflow-y: auto;
-    height: 78vh;
+    overflow: auto;
+    height: 75vh;
     margin-top: -1.5em;
     display: flex;
-    flex-wrap: wrap-reverse;
-    fle
+    flex-direction: column-reverse;
 }
 
 #chat::-webkit-scrollbar-track {
@@ -93,7 +89,7 @@ export default {
 #chat::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: #D62929;
+    background-color: #0097A7;
 }
 </style>
 

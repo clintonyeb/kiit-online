@@ -28,7 +28,7 @@ const state = {
   },
   chatInput: {
     content: '',
-    placeholder: 'Type your message here, you can use also select an emoticon with the left icon, or add a file with the right icon',
+    placeholder: 'Type your message here, you can also select an emoticon with the left icon, or add a file with the right icon',
     files: [],
     fileHover: false,
 
@@ -42,7 +42,7 @@ const state = {
     skin: 1,
   },
   progress: {
-    shown: true,
+    shown: false,
   },
 };
 
