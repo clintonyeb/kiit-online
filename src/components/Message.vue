@@ -6,7 +6,7 @@
         <div class="content" @click="messageClicked">
             <a class="author" v-tooltip:right="{html: mess.user.userName}">{{mess.user.fullName}}</a>
             <div class="metadata">
-                <v-icon dark>bubble_chart</v-icon>
+                <v-icon class="primary--text text--darken-2">bubble_chart</v-icon>
                 <timeago :since="date" class="date" :auto-update="60"></timeago>
             </div>
             <div class="text">

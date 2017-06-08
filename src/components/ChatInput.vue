@@ -20,6 +20,7 @@
 
 <script>
 import { Picker } from 'emoji-mart-vue'
+import { Emoji } from 'emoji-mart-vue'
 
 export default {
     name: 'chat-input',
@@ -47,11 +48,11 @@ export default {
         }
     },
     components: {
-        Picker
+        Picker, Emoji
     },
     methods: {
         emojiSelected: function (emoji, event) {
-            let data = `${this.content} ${emoji.native || emoji.colons} `;
+            let data = `${this.content} ${emoji.colons} `;
             this.$store.commit('CHAT_CONTENT', data);
         },
         textUpdated: function (event, text) {
@@ -158,6 +159,7 @@ textarea {
     z-index: -5 !important;
     margin-left: -3px;
 }
+
 
 
 

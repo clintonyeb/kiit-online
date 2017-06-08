@@ -41,6 +41,9 @@ const state = {
     color: '#00BCD4',
     skin: 1,
   },
+  progress: {
+    shown: true,
+  },
 };
 
 const actions = {
@@ -96,6 +99,9 @@ const mutations = {
   },
   NOTIFY_REMOVE(state, payload) {
     state.notifications = state.notifications.filter(item => item.type !== payload);
+  },
+  PROGRESS_SHOW(state, type) {
+    state.progress.shown = type;
   },
 };
 

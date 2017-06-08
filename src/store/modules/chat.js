@@ -16,12 +16,12 @@ const actions = {
 
 const mutations = {
   CHATS_ADD(state, payload) {
-    state.messages = addChat(state.messages, payload);
+    state.messages.push(payload);
   },
   SOCKET_CHATGET(state, payload) {
     setTimeout(() => {
       state.loading = false;
-    }, 2000);
+    }, 5000);
 
     if (payload === 'err') {
       return;
@@ -29,7 +29,7 @@ const mutations = {
     if (payload === 'done') {
       return;
     }
-    state.messages = addChat(state.messages, payload);
+    state.messages.unshift(payload);
   },
   START_LOADING(state, bool = true) {
     state.loading = bool;

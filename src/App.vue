@@ -3,7 +3,7 @@
     <router-view name="sideBar"></router-view>
     <router-view name="toolBar"></router-view>
     <main>
-      <v-container fluid class="main-container">
+      <v-container fluid id="main-container">
         <router-view></router-view>
       </v-container>
     </main>
@@ -12,6 +12,9 @@
       {{ snackbar.text }}
       <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
     </v-snackbar>
+    <div class="progress" v-if="progress.shown">
+      <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
+    </div>
     <router-view name="footer"></router-view>
   </div>
 </template>
@@ -48,7 +51,10 @@ export default {
     },
     snackbar() {
       return this.$store.state.layout.snackbar;
-    }
+    },
+    progress() {
+      return this.$store.state.layout.progress;
+    },
   },
   sockets: {
     message: function (data) {
@@ -103,6 +109,18 @@ $theme := {
 a {
   text-decoration: none;
 }
+
+.progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 100;
+}
+
+#main-container {
+  position: relative;
+}
+
 </style>
 
 
