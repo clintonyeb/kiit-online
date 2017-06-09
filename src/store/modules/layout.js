@@ -14,7 +14,16 @@ const state = {
     resizeWatcher: true,
   },
   toolbar: {},
-  notifications: [],
+  notifications: {
+    chat: {
+      avatar: null,
+      content: null,
+      time: null,
+      header: null,
+      length: 0,
+      key: 'chat',
+    },
+  },
   snackbar: {
     text: '',
     timeout: 4000,
@@ -49,8 +58,6 @@ const state = {
 const actions = {
   CHAT_NOTIFY({ commit, state, rootState }, payload) {
     if (rootState.route.name != 'chat') {
-      // play sound
-      payload.type = 'chat';
       commit('NOTIFY_ADD', payload);
     }
   },
@@ -93,12 +100,30 @@ const mutations = {
     state.chatInput.content = '';
   },
   NOTIFY_ADD(state, payload) {
+    let len = state.notifications.chat.length || 0;
+    len = len + 1;
+    let chat = {
+      avatar: payload.user.avatar || 'assets/avatar-default.png',
+      header: `${len} new chat messages`,
+      time: new Date().getTime(),
+      content: payload.content,
+      length: len,
+      key: 'chat'
+    };
+    state.notifications.chat = chat;
     let snd = new Audio('/assets/all-eyes-on-me.mp3');
-    state.notifications.push(payload);
     snd.play();
   },
-  NOTIFY_REMOVE(state, payload) {
-    state.notifications = state.notifications.filter(item => item.type !== payload);
+  NOTIFY_CLEAR(state, type = 'all') {
+    switch (type) {
+      case 'chat':
+        state.notifications.chat.length = 0;
+        break;
+      case 'all':
+        break;
+      default:
+        break;
+    }
   },
   PROGRESS_SHOW(state, type) {
     state.progress.shown = type;

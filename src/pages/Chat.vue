@@ -34,7 +34,7 @@ export default {
         }
 
         // remove any notifications for chat
-        this.$store.commit('NOTIFY_REMOVE', 'chat');
+        this.$store.commit('NOTIFY_CLEAR', 'chat');
     },
     computed: {
         chat: function () {

@@ -8,12 +8,26 @@
                     <v-icon>add</v-icon>
                 </v-btn>
             </v-toolbar-item>
-            <v-btn icon light v-tooltip:left="{html: 'View notifications'}" slot="activator">
-                <v-icon>notifications_none</v-icon>
-                <sup>
-                    <strong>{{notifies}}</strong>
-                </sup>
-            </v-btn>
+            <v-menu bottom left offset-y origin="center center" transition="v-scale-transition">
+                <v-btn icon @click.native="menuClicked" light v-tooltip:left="{html: 'View notifications'}" slot="activator">
+                    <v-icon :class="{'red--text': notifies}">{{notifies ? 'notifications_active' : 'notifications_none'}}</v-icon>
+                    <sub class="badge" v-if="notifies">
+                        <strong>{{notifies}}</strong>
+                    </sub>
+                </v-btn>
+                <v-list dense>
+                    <v-list-item v-for="item in notifications" v-bind:key="item.key" @click="menuItem(item.key)">
+                        <v-list-tile>
+                            <v-list-tile-action>
+                                <v-icon>message</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title v-html="item.header"></v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-toolbar-items>
     </v-toolbar>
 </template>
@@ -51,17 +65,44 @@ export default {
             }
         },
         notifies() {
-            return this.notifications.length;
+            return this.notifications.chat.length;
         },
         notifications() {
             return this.$store.state.layout.notifications;
         },
+    },
+    methods: {
+        menuClicked() {
+            this.$store.commit('NOTIFY_CLEAR');
+        },
+        menuItem(key) {
+            switch (key) {
+                case 'chat':
+                    this.$router.push('/chat');
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }
 </script>
 
 <style>
+/*.drop-menu {
+    position: relative;
+}
 
+.dropdown {
+    position: fixed;
+    left: 50%;
+}*/
+
+.badge {
+    font-size: 13px;
+    background-color: transparent !important;
+}
 </style>
 
 

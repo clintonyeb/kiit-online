@@ -1,21 +1,23 @@
 <template>
   <div id="app">
-    <router-view name="sideBar"></router-view>
-    <router-view name="toolBar"></router-view>
-    <main>
-      <v-container fluid id="main-container">
-        <router-view></router-view>
-      </v-container>
-    </main>
-    <router-view name="chatInput"></router-view>
-    <v-snackbar :timeout="snackbar.timeout" success :top="snackbar.top" :bottom="snackbar.bottom" :right="snackbar.right" :left="snackbar.left" :multi-line="snackbar.multiline" :vertical="snackbar.vertical" v-model="snackbar.shown">
-      {{ snackbar.text }}
-      <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
-    </v-snackbar>
-    <div class="progress" v-if="progress.shown">
-      <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
-    </div>
-    <router-view name="footer"></router-view>
+    <v-app>
+      <router-view name="sideBar"></router-view>
+      <router-view name="toolBar"></router-view>
+      <main>
+        <v-container fluid id="main-container">
+          <router-view></router-view>
+        </v-container>
+      </main>
+      <router-view name="chatInput"></router-view>
+      <v-snackbar :timeout="snackbar.timeout" success :top="snackbar.top" :bottom="snackbar.bottom" :right="snackbar.right" :left="snackbar.left" :multi-line="snackbar.multiline" :vertical="snackbar.vertical" v-model="snackbar.shown">
+        {{ snackbar.text }}
+        <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
+      </v-snackbar>
+      <div class="progress" v-if="progress.shown">
+        <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
+      </div>
+      <router-view name="footer"></router-view>
+    </v-app>
   </div>
 </template>
 

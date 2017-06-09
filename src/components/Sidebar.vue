@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer id="side-bar" persistent light :enable-resize-watcher="sidebar.resizeWatcher" :mini-variant.sync="sidebar.mini" v-model="sidebar.drawer">
+    <v-navigation-drawer id="side-bar" persistent hide-overlay light :enable-resize-watcher="sidebar.resizeWatcher" :mini-variant.sync="sidebar.mini" v-model="sidebar.drawer">
         <v-list class="pa-0">
             <v-list-item>
                 <v-list-tile avatar tag="div">
