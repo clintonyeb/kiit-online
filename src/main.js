@@ -12,7 +12,8 @@ if (!token) {
   token = localStorage.getItem('token');
 }
 
-Vue.use(VueSocketIO, `0.0.0.0:8000?token=${token}`, store);
+let origin = window.location.origin;
+Vue.use(VueSocketIO, `${origin}?token=${token}`, store);
 Vue.use(Vuetify);
 
 sync(store, router);

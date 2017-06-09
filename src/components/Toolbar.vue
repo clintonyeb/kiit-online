@@ -3,7 +3,7 @@
         <v-toolbar-side-icon light @click.native.stop="$store.commit('TOGGLE_DRAWER')"></v-toolbar-side-icon>
         <v-toolbar-title class="white--text">{{title}}</v-toolbar-title>
         <v-toolbar-items>
-            <v-toolbar-item to="/add" v-if="title != 'Add New Slide'">
+            <v-toolbar-item to="/create" v-if="title != 'Add New Slide'">
                 <v-btn icon light v-tooltip:left="{ html: 'Create a slide' }">
                     <v-icon>add</v-icon>
                 </v-btn>
@@ -55,7 +55,7 @@ export default {
                 case 'terms':
                     return 'Terms and Conditions';
                 case 'add':
-                    return 'Add New Slide';
+                    return 'Create New Post';
                 case 'chat':
                     return "Chat Room";
                 case 'login':

@@ -66,10 +66,10 @@ export default new VueRouter({
       },
     },
     {
-      path: '/add',
-      name: 'add',
+      path: '/create',
+      name: 'create',
       components: {
-        default: loadPage('Add'),
+        default: loadPage('Create'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
         footer: loadComponent('Footer'),

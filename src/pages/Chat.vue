@@ -1,7 +1,9 @@
 <template>
-    <div class="ui minimal comments" ref="chat" id="chat">
-        <message v-for="mess in chat" :key="mess" :mess="mess" class="mess"></message>
+    <div id="chat-container" ref="chat-container">
         <v-progress-circular v-if="loading" indeterminate class="primary--text prog"></v-progress-circular>
+        <div class="ui minimal comments"  id="chat">
+            <message v-for="mess in chat" :key="mess" :mess="mess" class="mess"></message>
+        </div>
     </div>
 </template>
 
@@ -23,7 +25,7 @@ export default {
         // instantiate container after nextTick, 
         // otherwise might be null
         this.$nextTick(() => {
-            this.container = this.$refs['chat'];
+            this.container = this.$refs['chat-container'];
             this.container.addEventListener('scroll', this.containerScrollled);
         });
 
@@ -89,28 +91,31 @@ export default {
     top: 0;
 }
 
-#chat {
-    overflow: auto;
+#chat-container {
+    overflow-y: scroll;
     height: calc(100vh - 11em);
     margin-top: -1em;
-    display: flex;
-    flex-direction: column-reverse;
     padding: 1em;
     padding-top: 3.5em;
 }
 
-#chat::-webkit-scrollbar-track {
+#chat {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#chat-container::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: #F5F5F5;
 }
 
-#chat::-webkit-scrollbar {
+#chat-container::-webkit-scrollbar {
     width: 12px;
     background-color: #F5F5F5;
 }
 
-#chat::-webkit-scrollbar-thumb {
+#chat-container::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #0097A7;

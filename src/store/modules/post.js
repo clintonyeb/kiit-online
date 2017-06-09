@@ -20,24 +20,31 @@ import { getSlides } from '../api';
 
 const state = {
   items: [],
+  create: {
+    currStep: 0,
+    type: '',
+    title: '',
+    date: null,
+    files: [],
+    content: '',
+    group: '',
+  }
 };
 
 const actions = {
-  /*GET_SLIDES({ commit }) {
-    getSlides((err, data) => {
-      console.log(data);
-      if (err || !data) return;
-      commit('SLIDES_GET', data);
-    });
-  },*/
 };
 
 const mutations = {
-  SOCKET_SLIDESGET(state, payload) {
-    state.items = payload;
+  SET_TYPE(state, type) {
+    state.create.type = type;
+    state.create.currStep = 1;
   },
-  SOCKET_SLIDEGET(state, post) {
-    state.items.push(post);
+  SET_CONTENT(state, data) {
+    state.create.title = data.title;
+    state.create.content = data.content || '';
+    state.create.date = data.date;
+    state.create.group = data.group;
+    state.create.currStep = 2;
   },
 };
 

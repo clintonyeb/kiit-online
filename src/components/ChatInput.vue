@@ -158,21 +158,7 @@ textarea {
     margin-bottom: 5em;
     z-index: -5 !important;
     margin-left: -3px;
-    opacity: 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

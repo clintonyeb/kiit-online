@@ -65,8 +65,8 @@ export default {
                     if (err) {
                         this.alert.message = 'Incorrect username and password';
                         this.alert.shown = true;
+                        return;
                     }
-
                     this.$store.commit('STORE_TOKEN', res);
                     // this.$router.replace('/');
                     window.location.replace('/');
