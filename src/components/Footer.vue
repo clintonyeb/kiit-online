@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="pa-3 footer">
+  <v-footer class="pa-3 footer hidden-sm-and-down">
     <v-spacer></v-spacer>
     <div>© KIIT University</div>
   </v-footer>

@@ -46,7 +46,7 @@
                 <v-card flat>
                     <v-card-text>
                     </v-card-text>
-                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
+                    <v-btn primary block @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
             </v-stepper-content>
         </v-stepper>

@@ -3,7 +3,7 @@
     <router-view name="sideBar"></router-view>
     <router-view name="toolBar"></router-view>
     <main>
-      <v-container fluid id="main-container">
+      <v-container fluid id="main-container" ref="main-container">
         <router-view></router-view>
       </v-container>
     </main>
@@ -26,9 +26,6 @@ export default {
   data() {
     return {
     }
-  },
-  mounted: function () {
-
   },
   created: function () {
     let token = localStorage.getItem('token');

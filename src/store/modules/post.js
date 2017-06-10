@@ -1,23 +1,3 @@
-import { getSlides } from '../api';
-
-/* let slide: {
-    document: String,
-    content: String,
-    preview: String,
-    user: {
-        id: String,
-        name: String,
-        roll: String
-    },
-    dateCreated: Date,
-    comments: [{
-        userId: String,
-        userName: String,
-        content: String,
-        dateCreated: Date
-    }]
-}*/
-
 const state = {
   items: [],
   create: {
@@ -28,7 +8,7 @@ const state = {
     files: [],
     content: '',
     group: '',
-  }
+  },
 };
 
 const actions = {
@@ -45,6 +25,10 @@ const mutations = {
     state.create.date = data.date;
     state.create.group = data.group;
     state.create.currStep = 2;
+  },
+  ADD_FILES(state, data) {
+
+    state.create.currStep = 3;
   },
 };
 
