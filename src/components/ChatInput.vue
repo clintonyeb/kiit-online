@@ -5,14 +5,14 @@
     
         <picker :title="picker.title" :skin="picker.skin" :color="picker.color" :sheetSize="picker.sheetSize" v-show="picker.shown" @click="emojiSelected" :emoji="picker.emoji" class="emoji"></picker>
     
-        <v-btn class="emoji-picker" icon :class="{ 'primary--text': picker.shown }" @click.native="$store.commit('TOGGLE_PICKER')" v-tooltip:right="{html: 'Insert emoticon'}">
+        <v-btn class="emoji-picker" icon :class="{ 'primary--text': picker.shown }" @click.native="$store.commit('TOGGLE_PICKER')">
             <v-icon light>insert_emoticon</v-icon>
         </v-btn>
     
-        <textarea rows="3" cols="100%" v-model="text" autofocus :placeholder="chatInput.placeholder" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)" v-focus>
+        <textarea rows="rows" cols="100%" v-model="text" :placeholder="textAreaMess" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)">
         </textarea>
     
-        <v-btn icon class="send-btn" v-tooltip:left="{html: content ? 'Send message' : 'Attach file(s)'}" @click.native="attachBtnClicked($event)">
+        <v-btn icon class="send-btn" @click.native="attachBtnClicked($event)">
             <v-icon light>{{content ? 'send' : 'attach_file'}}</v-icon>
         </v-btn>
     </v-toolbar>
@@ -26,7 +26,11 @@ export default {
     name: 'chat-input',
     data() {
         return {
+            isMobile: true,
         }
+    },
+    created() {
+        this.isMobile = window.innerWidth <= 800 && window.innerHeight <= 600;
     },
     computed: {
         text: function () {
@@ -40,11 +44,20 @@ export default {
         },
         chatInput: function () {
             return this.$store.state.layout.chatInput;
-        }
-    },
-    watch: {
-        focus: function (val) {
-            return val ? this.$refs['input'].focus() : '';
+        },
+        textAreaMess() {
+            if (this.isMobile) {
+                return 'Type your message here'
+            } else {
+                return this.chatInput.placeholder;
+            }
+        },
+        rows() {
+            if (this.isMobile) {
+                return 1
+            } else {
+                return 3;
+            }
         }
     },
     components: {
@@ -83,7 +96,6 @@ export default {
             this.$socket.emit('chat', data);
             this.$store.dispatch('addChat', data);
             this.$store.commit('CLEAR_CHAT_INPUT');
-            this.focused = true;
         },
 
         sendFile: function (files) {
@@ -129,6 +141,8 @@ export default {
     height: 6em !important;
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
+    align-content: center;
     width: 100%;
 }
 
@@ -136,19 +150,19 @@ textarea {
     outline: none !important;
     resize: none;
     overflow-y: hidden;
-    font-size: 1rem;
-    align-items: stretch;
+    font-size: 1.2rem;
     flex: 90;
+    align-self: center !important;
     z-index: 5;
 }
 
 .send-btn {
-    align-items: flex-end;
+    align-self: center;
     flex: 5;
 }
 
 .emoji-picker {
-    align-items: flex-start;
+    align-self: center;
     flex: 5;
 }
 
@@ -160,9 +174,6 @@ textarea {
     margin-left: -3px;
 }
 
-
-
-/*drag and drop*/
 
 input[type="file"] {
     position: absolute;
@@ -176,6 +187,24 @@ input[type="file"] {
 
 .drag-over {
     background-color: #DADADA;
+}
+
+
+@media only screen and (max-device-width: 768px) {
+    #chat-input {
+        height: 4em !important;
+    }
+
+    textarea {
+        padding: 20px;
+        font-size: 1.5rem;
+        position: relative;
+        top: 10px;
+    }
+
+    .emoji-picker {
+        padding-left: 10px;
+    }
 }
 </style>
 

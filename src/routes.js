@@ -83,7 +83,6 @@ export default new VueRouter({
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
         chatInput: loadComponent('ChatInput'),
-        footer: loadComponent('Footer'),
       },
     },
     {

@@ -15,7 +15,7 @@
                         <strong>{{notifies}}</strong>
                     </sub>
                 </v-btn>
-                <v-list dense>
+                <v-list dense v-if="notifies">
                     <v-list-item v-for="item in notifications" v-bind:key="item.key" @click="menuItem(item.key)">
                         <v-list-tile>
                             <v-list-tile-action>
@@ -65,7 +65,7 @@ export default {
             }
         },
         notifies() {
-            return this.notifications.chat.length;
+            return this.notifications.chat ? this.notifications.chat.length : 0;
         },
         notifications() {
             return this.$store.state.layout.notifications;

@@ -1,7 +1,7 @@
 <template>
     <div id="chat-container" ref="chat-container">
         <v-progress-circular v-if="loading" indeterminate class="primary--text prog"></v-progress-circular>
-        <div class="ui minimal comments"  id="chat">
+        <div class="ui minimal comments" id="chat">
             <message v-for="mess in chat" :key="mess" :mess="mess" class="mess"></message>
         </div>
     </div>
@@ -26,7 +26,7 @@ export default {
         // otherwise might be null
         this.$nextTick(() => {
             this.container = this.$refs['chat-container'];
-            this.container.addEventListener('scroll', this.containerScrollled);
+            this.container.addEventListener('scroll', this.containerScrolled);
         });
 
         // fetch new data if current is less than 20 when
@@ -47,7 +47,7 @@ export default {
         },
     },
     methods: {
-        containerScrollled(e) {
+        containerScrolled(e) {
             if (this.loading) return false;
             let container = e.target;
             let pos = this.container.scrollTop;
@@ -77,12 +77,12 @@ export default {
                 }
             });
         },
-    },
+    }
 }
 </script>
 
 
-<style scoped>
+<style>
 @import '../assets/comment.css';
 
 .prog {
@@ -93,10 +93,15 @@ export default {
 
 #chat-container {
     overflow-y: scroll;
-    height: calc(100vh - 11em);
-    margin-top: -1em;
-    padding: 1em;
-    padding-top: 3.5em;
+    height: calc(100vh - 10em);
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+@media only screen and (max-device-width: 768px) {
+    #chat-container {
+        height: calc(100vh - 12em) !important;
+    }
 }
 
 #chat {
@@ -104,21 +109,8 @@ export default {
     flex-direction: column-reverse;
 }
 
-#chat-container::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    background-color: #F5F5F5;
-}
-
-#chat-container::-webkit-scrollbar {
-    width: 12px;
-    background-color: #F5F5F5;
-}
-
-#chat-container::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-    background-color: #0097A7;
+#main-container {
+    padding-top: 0 !important;
 }
 </style>
 

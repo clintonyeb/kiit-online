@@ -15,14 +15,14 @@ const state = {
   },
   toolbar: {},
   notifications: {
-    chat: {
-      avatar: null,
-      content: null,
-      time: null,
-      header: null,
-      length: 0,
-      key: 'chat',
-    },
+    /* chat: {
+       avatar: null,
+       content: null,
+       time: null,
+       header: null,
+       length: 0,
+       key: 'chat',
+     },*/
   },
   snackbar: {
     text: '',
@@ -117,7 +117,7 @@ const mutations = {
   NOTIFY_CLEAR(state, type = 'all') {
     switch (type) {
       case 'chat':
-        state.notifications.chat.length = 0;
+        (state.notifications.chat) && (state.notifications.chat.length = 0);
         break;
       case 'all':
         break;

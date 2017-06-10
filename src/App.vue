@@ -1,24 +1,22 @@
 <template>
-  <div id="app">
-    <v-app>
-      <router-view name="sideBar"></router-view>
-      <router-view name="toolBar"></router-view>
-      <main>
-        <v-container fluid id="main-container">
-          <router-view></router-view>
-        </v-container>
-      </main>
-      <router-view name="chatInput"></router-view>
-      <v-snackbar :timeout="snackbar.timeout" success :top="snackbar.top" :bottom="snackbar.bottom" :right="snackbar.right" :left="snackbar.left" :multi-line="snackbar.multiline" :vertical="snackbar.vertical" v-model="snackbar.shown">
-        {{ snackbar.text }}
-        <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
-      </v-snackbar>
-      <div class="progress" v-if="progress.shown">
-        <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
-      </div>
-      <router-view name="footer"></router-view>
-    </v-app>
-  </div>
+  <v-app id="app">
+    <router-view name="sideBar"></router-view>
+    <router-view name="toolBar"></router-view>
+    <main>
+      <v-container fluid id="main-container">
+        <router-view></router-view>
+      </v-container>
+    </main>
+    <router-view name="chatInput"></router-view>
+    <v-snackbar :timeout="snackbar.timeout" success :top="snackbar.top" :bottom="snackbar.bottom" :right="snackbar.right" :left="snackbar.left" :multi-line="snackbar.multiline" :vertical="snackbar.vertical" v-model="snackbar.shown">
+      {{ snackbar.text }}
+      <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
+    </v-snackbar>
+    <div class="progress" v-if="progress.shown">
+      <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
+    </div>
+    <router-view name="footer"></router-view>
+  </v-app>
 </template>
 
 <script>
@@ -37,6 +35,7 @@ export default {
     if (!token) {
       return this.$router.replace('/login');
     }
+    console.log('here');
   },
   computed: {
     user() {
@@ -59,18 +58,6 @@ export default {
     },
   },
   sockets: {
-    message: function (data) {
-      this.$store.commit('CHATS_ADD', data);
-    },
-    requestedMessages: function (docs) {
-      return docs.length > 0 ? this.$store.commit('CHATS_GET', JSON.parse(docs)) : [];
-    },
-    requestedComments: function (data) {
-      console.log('comments received');
-    },
-    comments: function (data) {
-      this.$store.commit('COMMENTS_ADD', data);
-    },
     chat(payload) {
       if (payload.userName == this.userName) {
         console.log('message sent');
