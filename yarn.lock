@@ -4477,6 +4477,10 @@ socket.io@^2.0.2:
     socket.io-client "~2.0.2"
     socket.io-parser "~3.1.1"
 
+socketio-file-upload@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/socketio-file-upload/-/socketio-file-upload-0.6.0.tgz#813cf79bcf6b6dd4cf9b57a42c9efb4b6786a596"
+
 sort-keys@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/sort-keys/-/sort-keys-1.1.2.tgz#441b6d4d346798f1b4e49e8920adfba0e543f9ad"

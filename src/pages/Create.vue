@@ -44,9 +44,30 @@
             </v-stepper-content>
             <v-stepper-content step="2">
                 <v-card flat>
-                    <v-card-text>
-                    </v-card-text>
-                    <v-btn primary block @click.native="btnClicked" light>{{btnText}}</v-btn>
+                    <v-card-row ref="doc" class="document" @drop="drop" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
+                        <input type="file" name="file" @change="onChange">
+                        <h6 class="body-2">
+                            Drop files here
+                        </h6>
+                        <p>or</p>
+                        <h6 class="body-2">
+                            <i class="material-icons">file_upload</i>
+                            Click to upload files
+                        </h6>
+                    </v-card-row>
+    
+                    <v-card-row id="files" v-for="(file, index) in files" :key="file.name">
+                        <span>
+                            <v-chip close @input="removeFile(index)">
+                                <v-avatar class="teal">{{++index}}</v-avatar>
+                                {{file.name}}
+                            </v-chip>
+                            <span class="faded">{{formatBytes(file.size)}}</span>
+                        </span>
+                    </v-card-row>
+    
+                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
+    
                 </v-card>
             </v-stepper-content>
         </v-stepper>
@@ -56,7 +77,7 @@
 
 <script>
 
-import { uploadFiles, sendSlide } from '../store/api.js';
+import { Uploader } from '../store/api.js';
 
 export default {
     name: 'create',
@@ -104,6 +125,9 @@ export default {
             menu: false,
             group: '',
             content: '',
+            files: [],
+            uploader: null,
+            step: 0,
         }
     },
     methods: {
@@ -115,23 +139,37 @@ export default {
                     if (type === '' || type === null) {
                         return;
                     }
-                    this.$store.commit('SET_TYPE', type);
+                    this.step = 1;
                     break;
                 case 1:
-                    let title = this.title;
-                    let date = this.date;
-                    let content = this.content;
-                    let group = this.group;
-
-                    if (this.validate(title, date, group)) {
-                        let data = {
-                            title,
-                            date,
-                            content,
-                            group,
-                        }
-                        this.$store.commit('SET_CONTENT', data);
+                    if (this.validate(this.title, this.date, this.group)) {
+                        this.step = 2;
                     }
+                    break;
+                case 2:
+                    // send files here
+                    /*this.uploader.sendFiles(this.files, (err, res) => {
+
+                    });*/
+
+                    // add file paths to data before sending
+                    // send data
+                    let data = {
+                        title: this.title,
+                        date: this.date,
+                        group: this.group,
+                        content: this.content || '',
+                        files: [],
+                        userName: this.$store.state.user.userName,
+                        type: this.type,
+                    }
+                    this.$socket.emit('post', data, (err, res) => {
+                        if (res === 'done') {
+                            this.$router.push('/');
+                        }
+                    });
+                    this.step = 3;
+                    break;
                 default:
                     break;
             }
@@ -139,28 +177,53 @@ export default {
         validate(...params) {
             let verified = true;
             params.forEach((val) => {
-                verified = verified && val && val !== '' && val !== null
+                verified = verified && val && val !== '' && val !== null && val !== undefined
             });
 
             return verified;
-        }
+        },
+        drop(event) {
+            this.$refs.doc.classList.remove('drag-over');
+            event.preventDefault();
+            event.stopPropagation();
+            let files = event.dataTransfer.files;
+            this.files.push(...files);
+        },
+        removeFile(index) {
+            this.files.splice(index, 1);
+        },
+        onChange(event) {
+            let files = event.target.files;
+            this.files.push(...files);
+        },
+        dragOver(event) {
+            this.$refs.doc.classList.add('drag-over');
+        },
+        dragLeave(event) {
+            this.$refs.doc.classList.remove('drag-over');
+        },
+        formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
+
     },
     computed: {
-        create() {
-            return this.$store.state.post.create;
-        },
-        currStep() {
-            return this.create.currStep;
-        },
         btnText() {
             switch (this.currStep) {
                 case 0:
                 case 1:
                     return 'Next';
                 case 2:
-                    return 'Create new post'
+                    return 'Create post'
             }
+        },
+        currStep() {
+            return this.step;
         }
+    },
+    mounted() {
+        this.uploader = Uploader(this.$socket);
+    },
+    beforeDestroy() {
+        this.uploader.destroy();
     }
 }
 </script>
@@ -180,6 +243,39 @@ export default {
 .content {
     outline: none !important;
     resize: none;
+}
+
+.document {
+    border: 2px dashed #DADADA;
+    text-align: center;
+    display: block;
+    padding: 5px;
+    position: relative;
+    margin: 10px;
+}
+
+#files {
+    cursor: pointer;
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.document:hover {
+    box-shadow: 2px 2px 1px #000, 1px 1px 2px #DADADA;
+}
+
+.drag-over {
+    box-shadow: 2px 2px 1px #000, 1px 1px 2px #DADADA;
 }
 </style>
 

@@ -58,7 +58,7 @@ const mutations = {
     state.avatar = payload.avatar || '';
   },
   SOCKET_CONNECT(state) {
-    console.log('socket connected');
+    // console.log('socket connected');
   },
   SOCKET_AUTH(state, payload) {
     if (payload == '401') {

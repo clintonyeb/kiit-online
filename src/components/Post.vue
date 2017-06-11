@@ -1,28 +1,27 @@
 <template>
     <div class="event">
         <div class="label">
-            <img :src="user.avatar">
+            <img :src="avatar">
         </div>
         <div class="content">
             <div class="summary">
-                <a class="avatar">
+                <a class="user">
                     {{user.fullName}}
-                </a> {{post.title}}
-                <div class="date">
-                    {{date}}
-                </div>
+                </a> added a new lecture slide
+                <timeago :since="date" class="date" :auto-update="60"></timeago>
             </div>
             <div class="extra text" v-if="post.content">
+                <span class="title">{{post.title}}</span>
                 {{post.content}}
             </div>
-            <div class="extra images" v-for="file in post.files">
+            <div class="extra images" v-for="file in post.files" v-if="post.files">
                 <a>
                     <img :src="file">
                 </a>
             </div>
             <div class="meta">
                 <a class="like">
-                    <i class="like icon"></i> 4 Comments
+                    <i class="like icon"></i> {{comments}}
                 </a>
             </div>
         </div>
@@ -39,7 +38,7 @@ export default {
     },
     computed: {
         comments: function () {
-            switch (this.slide.comments) {
+            switch (this.post.comments) {
                 case 0:
                     return 'No comments'
                 case 1:
@@ -53,46 +52,19 @@ export default {
         },
         avatar() {
             return this.user.avatar || '/assets/avatar-default.png';
-        }
+        },
+        date() {
+            let time = this.post.time;
+            return new Date(Number(time));
+        },
     }
 }
 </script>
 
 <style scoped>
-.card {
-    width: 100%;
-    max-width: 700px;
-}
-
-.card {
-    margin-bottom: 5px;
-}
-
-.header {
-    padding: 10px;
-}
-
 .title {
-    font-weight: bolder;
-    text-shadow: 1px 1px 3px #000;
-}
-
-.date {
-    font-size: .9rem;
-    font-style: italic;
-}
-
-#user:hover {
-    color: #000;
-}
-
-.comments {
-    margin-left: 5px;
-    border-bottom: 1px solid #03A9F4;
-}
-
-#user {
-    border-bottom: 1px solid #03A9F4;
+    display: block;
+    font-size: 1.1rem;
 }
 </style>
 

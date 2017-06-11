@@ -32,7 +32,6 @@ export default {
     if (!token) {
       return this.$router.replace('/login');
     }
-    console.log('here');
   },
   computed: {
     user() {

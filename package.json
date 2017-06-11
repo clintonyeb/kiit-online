@@ -7,7 +7,7 @@
   "main": "lib/index.js",
   "scripts": {
     "vue-build": "cross-env NODE_ENV=development webpack --hide-modules --colors --watch",
-    "node-build": "nodemon --delay 30 -e js,html,css lib/index.js",
+    "node-build": "nodemon --ignore lib/uploads --delay 30 -e js,html,css lib/index.js",
     "dev": "concurrently --kill-others \"yarn run vue-build\" \"nodemon lib/index.js\" ",
     "test": "lab"
   },
@@ -27,6 +27,7 @@
     "redis": "^2.7.1",
     "socket.io": "^2.0.2",
     "socket.io-client": "^2.0.2",
+    "socketio-file-upload": "^0.6.0",
     "vue": "^2.3.3",
     "vue-router": "^2.5.3",
     "vue-socket.io": "^2.1.1-a",

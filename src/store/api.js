@@ -1,52 +1,16 @@
-import axios from 'axios';
-var Dropbox = require('dropbox');
+import Axios from 'axios';
+import Upload from '../../node_modules/socketio-file-upload/client';
 
-export function getUser(callback) {
-  const url = '/users'
+function get(url, cb) {
+  return Axios.get(url)
+    .then(res => cb(null, res))
+    .catch(err => cb(err));
 }
 
-export function getSlides(callback) {
-  let url = '/slides';
-  axios.get(url)
-    .then(response => callback(null, response.data))
-    .catch(err => callback(err))
-}
-
-export function uploadFiles(files, callback) {
-  const access_token = 'iDcopksrBPAAAAAAAAABE3N0I6eLXhaRI_l_Oh_LWxjZ7lHYhW2ieQCA1YaWKhgo'
-  const dbx = new Dropbox({
-    accessToken: access_token
-  });
-
-  let res = [];
-  files.forEach(function (_, index) {
-    res[index] = -1;
-  }, this);
-  let promises = [];
-
-  files.forEach(function (file, index) {
-    let name = new Date().getTime() + '-' + file.name;
-    dbx.filesUpload({ path: "/" + name, contents: file })
-      .then((response) => {
-        callback(null, index, name);
-      })
-      .catch((err) => {
-        callback(err, index);
-      })
-  }, this);
-
-}
-
-export function sendSlide(data, callback) {
-  let url = '/slides';
-  console.log('payload', data);
-}
-
-
-export function getChats(callback) {
-  let chats = [];
-  return callback(null, chats);
-
+function post(url, data, cb) {
+  return Axios.post(url, data)
+    .then(response => cb(null, response.data))
+    .catch(err => cb(err));
 }
 
 export function authenticate(callback) {
@@ -59,7 +23,6 @@ export function validateRollNumber(userName, callback) {
 }
 
 export function postAccountDetails(data, callback) {
-  console.log(data);
   return post('/users', data, callback);
 }
 
@@ -67,18 +30,43 @@ export function loginUser(payload, cb) {
   return post('/login', payload, cb);
 }
 
-function post(url, data, cb) {
-  return axios.post(url, data)
-    .then(response => cb(null, response.data))
-    .catch(err => cb(err));
-}
+export function Uploader(socket) {
+  let uploader = new Upload(socket);
 
-function get(url, cb) {
-  return axios.get(url)
-    .then(res => {
-      return cb(null);
-    })
-    .catch(err => {
-      return cb(err);
-    })
+  const complete = (event) => {
+    console.log('complete', event.file, event.success, event.detail);
+  };
+
+  const failed = (event) => {
+    console.log('failed', event.file, event.message, event.code);
+  };
+
+  const start = (event) => {
+    console.log('start', event.file);
+  };
+
+  uploader.addEventListener('start', start);
+  uploader.addEventListener('progress', (event) => {
+    console.log('progress', event);
+  });
+  uploader.addEventListener('load', (event) => {
+    console.log('load', event);
+  });
+  uploader.addEventListener('choose', (event) => {
+    console.log('load', event.files);
+  });
+  uploader.addEventListener('complete', complete);
+  uploader.addEventListener('error', failed);
+
+  return {
+    sendFiles: (files) => {
+      uploader.submitFiles(files);
+    },
+    destroy: () => {
+      uploader.removeEventListener('complete', complete);
+      uploader.removeEventListener('err', failed);
+      uploader.destroy();
+      uploader = null;
+    },
+  };
 }

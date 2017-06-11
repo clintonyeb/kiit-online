@@ -3,6 +3,7 @@ import Vuetify from 'vuetify';
 import { sync } from 'vuex-router-sync';
 import VueTimeago from 'vue-timeago';
 import VueSocketIO from 'vue-socket.io';
+import socketio from 'socket.io-client';
 import App from './App.vue';
 import store from './store';
 import router from './routes';
@@ -12,8 +13,9 @@ if (!token) {
   token = localStorage.getItem('token');
 }
 
-let origin = window.location.origin;
-Vue.use(VueSocketIO, `${origin}?token=${token}`, store);
+const origin = window.location.origin;
+const socket = socketio(`${origin}?token=${token}`);
+Vue.use(VueSocketIO, socket, store);
 Vue.use(Vuetify);
 
 sync(store, router);
