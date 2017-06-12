@@ -52,8 +52,8 @@ export default {
                     return 'Profile';
                 case 'settings':
                     return 'Settings';
-                case 'terms':
-                    return 'Terms and Conditions';
+                case 'help':
+                    return 'Help';
                 case 'add':
                     return 'Create New Post';
                 case 'chat':

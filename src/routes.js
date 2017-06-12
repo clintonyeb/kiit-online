@@ -56,10 +56,10 @@ export default new VueRouter({
       },
     },
     {
-      path: '/terms',
-      name: 'terms',
+      path: '/help',
+      name: 'help',
       components: {
-        default: loadPage('Terms'),
+        default: loadPage('Help'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
         footer: loadComponent('Footer'),

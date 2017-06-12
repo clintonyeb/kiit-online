@@ -27,16 +27,17 @@ export default {
         this.$nextTick(() => {
             this.container = this.$refs['chat-container'];
             this.container.addEventListener('scroll', this.containerScrolled);
+
+            // remove any notifications for chat
+            this.$store.commit('NOTIFY_CLEAR', 'chat');
         });
 
-        // fetch new data if current is less than 20 when
-        // component was created
-        if (this.chat.length < 20) {
+
+    },
+    beforeMount() {
+        if (this.chat.length < 20 && !this.$store.state.chat.done) {
             this.fetchData(0);
         }
-
-        // remove any notifications for chat
-        this.$store.commit('NOTIFY_CLEAR', 'chat');
     },
     computed: {
         chat: function () {
@@ -59,12 +60,20 @@ export default {
             let done = this.$store.state.chat.done;
             if (done) return;
 
+            let userName = this.$store.state.user.userName;
+            if (!userName) {
+                setTimeout(() => {
+                    this.fetchData(offset);
+                }, 50);
+                return;
+            }
+
             if (offset === 0) this.$store.commit('PROGRESS_SHOW', true);
             else this.$store.commit('START_LOADING', true);
 
             this.$socket.emit('getChats', {
-                userName: this.$store.state.user.userName,
-                offset: offset,
+                userName,
+                offset,
             }, (err, res) => {
                 // start load, so scroll to bottom
                 if (offset === 0) {
@@ -77,14 +86,15 @@ export default {
                 }
             });
         },
+        init() {
+
+        },
     }
 }
 </script>
 
 
-<style>
-@import '../assets/comment.css';
-
+<style scoped>
 .prog {
     position: absolute;
     left: 50%;
@@ -98,19 +108,21 @@ export default {
     flex-direction: column-reverse;
 }
 
+#chat {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
 @media only screen and (max-device-width: 768px) {
     #chat-container {
         height: calc(100vh - 12em) !important;
     }
 }
 
-#chat {
-    display: flex;
-    flex-direction: column-reverse;
-}
-
-#main-container {
-    padding-top: 0 !important;
+@media only screen and (min-device-width: 768px) {
+    #chat {
+        padding-right: 30px;
+    }
 }
 </style>
 

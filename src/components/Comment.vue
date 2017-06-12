@@ -1,0 +1,135 @@
+<template>
+  <v-layout row justify-center>
+    <v-dialog v-model="dialog" fullscreen :scrollable="true" transition="v-dialog-bottom-transition">
+      <v-card>
+        <v-card-row>
+          <v-toolbar light>
+            <v-btn icon="icon" @click.native="hide" light>
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title>{{post.title}}</v-toolbar-title>
+          </v-toolbar>
+        </v-card-row>
+  
+        <v-card-text id="comment-container">
+          <v-layout row wrap class="layout">
+            <v-flex xs12 md5 class="ui large feed">
+              <div class="event">
+                <div class="content">
+                  <div class="extra text">
+                    <span v-if="post.content">{{post.content}}</span>
+                  </div>
+                  <div class="extra images" v-for="file in post.files" :key="file">
+                    <a>
+                      <img :src="file">
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </v-flex>
+            <v-flex xs12 md7 class="comm">
+              <h4 class="title">Comments</h4>
+              <div class="ui minimal comments">
+                <message v-for="mess in comments" :key="mess" :mess="mess" class="mess"></message>
+              </div>
+              <comment-input class="commentInput" :postId="postId"></comment-input>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+  
+      </v-card>
+    </v-dialog>
+  </v-layout>
+</template>
+
+<script>
+
+import Message from './Message.vue';
+import CommentInput from './CommentInput.vue';
+
+export default {
+  props: ['shown', 'postId'],
+  name: 'comment',
+  data() {
+    return {
+      dialog: false,
+      comments: [],
+    }
+  },
+  computed: {
+    post() {
+      return this.$store.getters.getPostById(this.postId);
+    },
+    user() {
+      return this.post.user;
+    },
+    /*comments() {
+      let comms = this.$store.getters.getCommentsById(this.postId);
+      return comms;
+    }*/
+  },
+  watch: {
+    shown() {
+      if (!this.shown) {
+        this.dialog = false;
+        document.getElementsByTagName("html")[0].style = "";
+      } else {
+        this.dialog = true;
+      }
+    },
+    postId() {
+      let comms = this.$store.getters.getCommentsById(this.postId);
+      if (!comms.items) {
+        this.$socket.emit('getComments', {
+          postId: this.postId,
+          userName: this.$store.state.user.userName
+        }, (err, res) => {
+          this.comments = this.$store.getters.getCommentsById(this.postId);
+        });
+      }
+    },
+  },
+  methods: {
+    hide() {
+      this.dialog = false;
+      this.$emit('hidden');
+    }
+  },
+  mounted() {
+
+  },
+  components: {
+    Message, CommentInput
+  }
+}
+</script>
+
+<style scoped>
+#comment-container {
+  height: 92vh !important;
+  margin-top: -48px;
+  overflow: auto;
+}
+
+.title {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.comm {
+  position: relative;
+  height: 90vh;
+  display: block;
+}
+
+.feed {
+  height: 100%;
+}
+
+.comments {
+  height: 75.75vh;
+  overflow-y: auto;
+}
+</style>
+
+

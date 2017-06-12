@@ -3,7 +3,7 @@
     <router-view name="sideBar"></router-view>
     <router-view name="toolBar"></router-view>
     <main>
-      <v-container fluid id="main-container" ref="main-container">
+      <v-container fluid id="main-container" :class="[notPadded ? 'notPadded' : 'padded']">
         <router-view></router-view>
       </v-container>
     </main>
@@ -27,7 +27,7 @@ export default {
     return {
     }
   },
-  created: function () {
+  beforeCreate: function () {
     let token = localStorage.getItem('token');
     if (!token) {
       return this.$router.replace('/login');
@@ -52,6 +52,9 @@ export default {
     progress() {
       return this.$store.state.layout.progress;
     },
+    notPadded() {
+      return this.$route.name === 'chat';
+    }
   },
   sockets: {
     chat(payload) {
@@ -90,6 +93,8 @@ $theme := {
 }
 
 @import '../node_modules/vuetify/src/stylus/main';
+@import './assets/feed.css';
+@import './assets/comment.css';
 
 a {
   text-decoration: none;
@@ -106,6 +111,13 @@ a {
   position: relative;
 }
 
+.notPadded {
+      padding-top: 0;
+} 
+
+.padded {
+      padding-top: 1rem;
+} 
 </style>
 
 

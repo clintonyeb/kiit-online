@@ -65,6 +65,13 @@ export default {
         sidebar() {
             return this.$store.state.layout.sidebar;
         }
+    },
+    destroyed() {
+        let overlay = document.querySelector('.overlay.overlay--active');
+        if (overlay) {
+            let parent = overlay.parentNode;
+            parent.removeChild(overlay);
+        }
     }
 }
 </script>

@@ -53,6 +53,10 @@ const state = {
   progress: {
     shown: false,
   },
+  comment: {
+    dialog: false,
+    items: [],
+  },
 };
 
 const actions = {
@@ -64,8 +68,9 @@ const actions = {
 };
 
 const mutations = {
-  TOGGLE_DRAWER(state) {
-    state.sidebar.drawer = !state.sidebar.drawer;
+  TOGGLE_DRAWER(state, b) {
+    state.sidebar.drawer = typeof b === 'undefined' ? !state.sidebar.drawer : b;
+    console.log('hiden drawer: ', state.sidebar.drawer);
   },
   CHAT_CONTENT(state, data) {
     state.chatInput.content = data;
@@ -127,6 +132,9 @@ const mutations = {
   },
   PROGRESS_SHOW(state, type) {
     state.progress.shown = type;
+  },
+  SHOW_DIALOG(state, b = true) {
+    state.comment.dialog = b;
   },
 };
 

@@ -9,7 +9,7 @@
             <v-icon light>insert_emoticon</v-icon>
         </v-btn>
     
-        <textarea rows="rows" cols="100%" v-model="text" :placeholder="textAreaMess" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)">
+        <textarea rows="1" cols="100%" v-model="text" :placeholder="textAreaMess" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @input="textUpdated($event, $refs.input.value)" @keydown="preventNewLine($event)">
         </textarea>
     
         <v-btn icon class="send-btn" @click.native="attachBtnClicked($event)">
@@ -30,7 +30,7 @@ export default {
         }
     },
     created() {
-        this.isMobile = window.innerWidth <= 800 && window.innerHeight <= 600;
+        this.isMobile = window.innerWidth <= 800;
     },
     computed: {
         text: function () {
@@ -199,7 +199,6 @@ input[type="file"] {
         padding: 20px;
         font-size: 1.5rem;
         position: relative;
-        top: 10px;
     }
 
     .emoji-picker {

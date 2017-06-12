@@ -80,7 +80,7 @@ export default {
 <style scoped>
 .login-cont,
 .page-content {
-    width: 90%;
+    width: 100%;
     max-width: 700px;
     margin: 0 auto;
 }

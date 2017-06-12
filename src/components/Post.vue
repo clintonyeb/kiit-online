@@ -1,5 +1,5 @@
 <template>
-    <div class="event">
+    <div class="event" @click.stop="postClicked">
         <div class="label">
             <img :src="avatar">
         </div>
@@ -10,18 +10,21 @@
                 </a> added a new lecture slide
                 <timeago :since="date" class="date" :auto-update="60"></timeago>
             </div>
-            <div class="extra text" v-if="post.content">
+            <div class="extra text">
                 <span class="title">{{post.title}}</span>
-                {{post.content}}
+                <span v-if="post.content">{{content}}</span>
             </div>
-            <div class="extra images" v-for="file in post.files" v-if="post.files">
+            <div class="extra images" v-for="file in post.files" :key="file">
                 <a>
                     <img :src="file">
                 </a>
             </div>
             <div class="meta">
                 <a class="like">
-                    <i class="like icon"></i> {{comments}}
+                    <img src="/assets/chat.svg" class="image icon"> {{comments}}
+                </a>
+                <a class="like detail">
+                    Click to view full post
                 </a>
             </div>
         </div>
@@ -38,14 +41,7 @@ export default {
     },
     computed: {
         comments: function () {
-            switch (this.post.comments) {
-                case 0:
-                    return 'No comments'
-                case 1:
-                    return '1 comment'
-                default:
-                    return 'No comments'
-            }
+            return this.post.commentsCount ? `${this.post.commentsCount} comments` : 'No comments';
         },
         user() {
             return this.post.user
@@ -57,7 +53,20 @@ export default {
             let time = this.post.time;
             return new Date(Number(time));
         },
-    }
+        content() {
+            let parts = this.post.content.split('.');
+            let text = parts.slice(0, 2).join('. ').trim() + '.';
+            if (parts.length > 2) {
+                text = `${text}..`;
+            }
+            return text;
+        }
+    },
+    methods: {
+        postClicked(event) {
+            this.$emit('clicked', this.post.id);
+        },
+    },
 }
 </script>
 
@@ -65,6 +74,38 @@ export default {
 .title {
     display: block;
     font-size: 1.1rem;
+}
+
+.event {
+    cursor: pointer;
+}
+
+.image.icon {
+    height: 15px;
+    width: 15px;
+    color: #00BCD4;
+    line-height: 2;
+    margin-right: 10px;
+}
+
+.meta {
+    display: inline-block;
+    width: 100%;
+}
+
+.detail {
+    padding-left: 5em;
+    font-size: .8rem;
+    visibility: hidden;
+    opacity: 0 !important;
+    -webkit-transition: opacity .2s ease-out .5s !important;
+    -moz-transition: opacity .2s ease-out .5s !important;
+    transition: opacity .2s ease-out .5s !important;
+}
+
+.event:hover .detail {
+    visibility: visible;
+    opacity: 1 !important;
 }
 </style>
 
