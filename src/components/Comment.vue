@@ -30,7 +30,7 @@
               <div class="ui minimal comments">
                 <message v-for="mess in comments" :key="mess" :mess="mess" class="mess"></message>
               </div>
-              <comment-input :postId="postId" @focused="commFocused" @blurred="commBlurred"></comment-input>
+              <comment-input :postId="postId" @submitted="submitted"></comment-input>
             </v-flex>
           </v-layout>
         </v-card-text>
@@ -93,16 +93,12 @@ export default {
       this.dialog = false;
       this.$emit('hidden');
     },
-    commFocused() {
-      let cont = this.$refs['dialog'];
-      cont.scrollTop = cont.scrollHeight;
+    submitted(height) {
+      let cont = this.$refs.dialog.$refs.content.firstChild;
+      this.$nextTick(() => {
+        cont.scrollTop = cont.scrollHeight + height;
+      })
     },
-    commBlurred() {
-
-    },
-  },
-  mounted() {
-
   },
   components: {
     Message, CommentInput
@@ -111,17 +107,27 @@ export default {
 </script>
 
 <style scoped>
+.card {
+  padding-bottom: 4.5em !important;
+}
+
 #comment-container {
-  height: 100% !important;
+  height: 100%!important;
   padding: 0 !important;
-  padding-bottom: 0 !important;
   overflow-x: hidden;
 }
 
-#app>div.dialog__content>div {
-  overflow-y: hidden !important;
-}
 
+
+
+
+
+
+
+/*.comments {
+  display: flex;
+  flex-direction: column-reverse;
+}*/
 
 .feed,
 .comments,
@@ -129,66 +135,9 @@ export default {
   padding-left: 20px !important;
   padding-right: 20px !important;
 }
+
+.flex-comments {
+  position: relative !important;
+  width: inherit !important;
+}
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*@media only screen and (max-device-width: 768px) {
-  .commentInput {
-    margin-right: 10px !important;
-  }
-}*/
-</style>
-
-

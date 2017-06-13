@@ -63,6 +63,7 @@ export default {
       });
       this.$store.dispatch('addComment', data);
       this.content = '';
+      this.$emit('submitted', this.$refs['comment-input'].clientHeight);
     },
 
     sendFile: function (files) {
@@ -98,10 +99,17 @@ export default {
       }
     },
     inputFocused(event) {
-      this.$emit('focused');
     },
     inputBlurred(event) {
-      this.$emit('blurred');
+    },
+    findPos(obj) {
+      var curtop = 0;
+      if (obj.offsetParent) {
+        do {
+          curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return [curtop];
+      }
     }
   }
 }
@@ -114,10 +122,12 @@ export default {
   flex-wrap: nowrap;
   align-items: center;
   align-content: center;
-  position: sticky;
-  bottom: 0 !important;
+  position: fixed;
   background-color: white;
-  max-width: 100% !important;
+  width: inherit !important;
+  top: calc(100% - 4em);
+  left: 0;
+  right: 0;
 }
 
 textarea {
