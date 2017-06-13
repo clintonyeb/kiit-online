@@ -1,17 +1,15 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialog" fullscreen :scrollable="true" transition="v-dialog-bottom-transition">
+    <v-dialog v-model="dialog" fullscreen transition="v-dialog-bottom-transition" ref="dialog" id="dialog">
       <v-card>
-        <v-card-row>
-          <v-toolbar light>
-            <v-btn icon="icon" @click.native="hide" light>
-              <v-icon>close</v-icon>
-            </v-btn>
-            <v-toolbar-title>{{post.title}}</v-toolbar-title>
-          </v-toolbar>
-        </v-card-row>
+        <v-toolbar light>
+          <v-btn icon="icon" @click.native="hide" light>
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{post.title}}</v-toolbar-title>
+        </v-toolbar>
   
-        <v-card-text id="comment-container">
+        <v-card-text id="comment-container" ref="comment-container">
           <v-layout row wrap class="layout">
             <v-flex xs12 md5 class="ui large feed">
               <div class="event">
@@ -27,17 +25,18 @@
                 </div>
               </div>
             </v-flex>
-            <v-flex xs12 md7 class="comm">
+            <v-flex xs12 md7 class="flex-comments">
               <h4 class="title">Comments</h4>
               <div class="ui minimal comments">
                 <message v-for="mess in comments" :key="mess" :mess="mess" class="mess"></message>
               </div>
-              <comment-input class="commentInput" :postId="postId"></comment-input>
+              <comment-input :postId="postId" @focused="commFocused" @blurred="commBlurred"></comment-input>
             </v-flex>
           </v-layout>
         </v-card-text>
   
       </v-card>
+  
     </v-dialog>
   </v-layout>
 </template>
@@ -93,7 +92,14 @@ export default {
     hide() {
       this.dialog = false;
       this.$emit('hidden');
-    }
+    },
+    commFocused() {
+      let cont = this.$refs['dialog'];
+      cont.scrollTop = cont.scrollHeight;
+    },
+    commBlurred() {
+
+    },
   },
   mounted() {
 
@@ -106,30 +112,83 @@ export default {
 
 <style scoped>
 #comment-container {
-  height: 92vh !important;
-  margin-top: -48px;
-  overflow: auto;
+  height: 100% !important;
+  padding: 0 !important;
+  padding-bottom: 0 !important;
+  overflow-x: hidden;
 }
 
+#app>div.dialog__content>div {
+  overflow-y: hidden !important;
+}
+
+
+.feed,
+.comments,
 .title {
-  display: block;
-  font-size: 1.1rem;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
 }
+</style>
 
-.comm {
-  position: relative;
-  height: 90vh;
-  display: block;
-}
 
-.feed {
-  height: 100%;
-}
 
-.comments {
-  height: 75.75vh;
-  overflow-y: auto;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*@media only screen and (max-device-width: 768px) {
+  .commentInput {
+    margin-right: 10px !important;
+  }
+}*/
 </style>
 
 

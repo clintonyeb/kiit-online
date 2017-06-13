@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar light id="chat-input" ref="chat-input" class="dark--text" :class="chatInput.fileHover ? 'primary' : 'white' " @drop="drop" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
+    <v-toolbar id="chat-input" ref="chat-input" class="dark--text" :class="chatInput.fileHover ? 'primary' : 'white' " @drop="drop" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
     
         <input type="file" name="file" @change="onChange" style="visibility:hidden;">
     
@@ -196,7 +196,6 @@ input[type="file"] {
     }
 
     textarea {
-        padding: 20px;
         font-size: 1.5rem;
         position: relative;
     }

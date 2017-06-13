@@ -1,18 +1,18 @@
 <template>
-  <div id="comment-input" ref="comment-input" class="dark--text elevation-3">
+  <v-toolbar id="comment-input" ref="comment-input" class="dark--text">
   
-    <v-btn class="emoji-picker" icon>
+    <v-btn id="emoji-picker" icon>
       <v-icon light>insert_emoticon</v-icon>
     </v-btn>
   
-    <textarea rows="1" cols="100%" v-model="content" placeholder="Type your comment here" @focus="$store.commit('TOGGLE_PICKER', false)" ref="input" @keydown="preventNewLine($event)">
+    <textarea rows="1" cols="100%" v-model="content" placeholder="Type your comment here" @blur="inputBlurred" @focus="inputFocused" ref="input" id="elInput" @keydown="preventNewLine($event)">
     </textarea>
   
-    <v-btn icon class="send-btn" @click.native="attachBtnClicked($event)">
+    <v-btn icon id="send-btn" @click.native="attachBtnClicked($event)">
       <v-icon light>{{content ? 'send' : 'attach_file'}}</v-icon>
     </v-btn>
   
-  </div>
+  </v-toolbar>
 </template>
 
 <script>
@@ -96,6 +96,12 @@ export default {
         if (input === null) return;
         input.click();
       }
+    },
+    inputFocused(event) {
+      this.$emit('focused');
+    },
+    inputBlurred(event) {
+      this.$emit('blurred');
     }
   }
 }
@@ -103,13 +109,15 @@ export default {
 
 <style scoped>
 #comment-input {
-  width: 100%;
   height: 4em !important;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   align-content: center;
-  border-radius: 8px;
+  position: sticky;
+  bottom: 0 !important;
+  background-color: white;
+  max-width: 100% !important;
 }
 
 textarea {
@@ -118,26 +126,27 @@ textarea {
   overflow-y: hidden;
   font-size: 1.2rem;
   flex: 90;
-  align-self: center !important;
   z-index: 5;
+  align-self: center;
+  max-width: 100% !important;
 }
 
-.send-btn {
+#send-btn {
   align-self: center;
   flex: 5;
+  margin: 0 10px 0 10px !important;
 }
 
-.emoji-picker {
+#emoji-picker {
   align-self: center;
   flex: 5;
+  margin: 0 10px 0 10px !important;
 }
 
 @media only screen and (max-device-width: 768px) {
   textarea {
-    padding: 20px;
     font-size: 1.5rem;
     position: relative;
-    top: 10px;
   }
 }
 </style>
