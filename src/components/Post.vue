@@ -14,14 +14,19 @@
                 <span class="title">{{post.title}}</span>
                 <span v-if="post.content">{{content}}</span>
             </div>
-            <div class="extra images" v-for="file in post.files" :key="file">
-                <a>
-                    <img :src="file">
-                </a>
+            <div class="extra images" v-for="file in post.files.slice(0, 6)" :key="file">
+                <img :src="`/assets/previews/${file}`">
+                <div class="img-middle">
+                    <v-btn class="dark--text" icon>
+                        <v-icon dark>file_download</v-icon>
+                    </v-btn>
+                    <!--<span class="faded">{{formatBytes(file.size)}}</span>-->
+                </div>
             </div>
+            <v-divider></v-divider>
             <div class="meta">
                 <a class="like">
-                    <img src="/assets/chat.svg" class="image icon"> {{comments}}
+                    <img src="/assets/images/chat.svg" class="image icon"> {{comments}}
                 </a>
                 <a class="like detail">
                     Click to view full post
@@ -47,7 +52,7 @@ export default {
             return this.post.user
         },
         avatar() {
-            return this.user.avatar || '/assets/avatar-default.png';
+            return this.user.avatar || '/assets/images/avatar-default.png';
         },
         date() {
             let time = this.post.time;
@@ -66,6 +71,8 @@ export default {
         postClicked(event) {
             this.$emit('clicked', this.post.id);
         },
+        formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
+
     },
 }
 </script>
@@ -110,6 +117,39 @@ export default {
 
 .event:hover {
     box-shadow: 1px 1px 3px #DADADA;
+}
+
+.extra.images {
+    display: inline-block;
+    width: 95px;
+    position: relative;
+}
+
+.extra.images img {
+    width: 100%;
+    padding: 5px;
+    opacity: 1;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+}
+
+.extra.images .img-middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%)
+}
+
+.extra.images:hover img {
+    opacity: 0.3;
+}
+
+.extra.images:hover .img-middle {
+    opacity: 1;
 }
 </style>
 

@@ -44,7 +44,7 @@ export default {
       return this.user.fullName;
     },
     avatar() {
-      return this.user.avatar || '/assets/avatar-default.png'
+      return this.user.avatar || '/assets/images/avatar-default.png'
     },
     snackbar() {
       return this.$store.state.layout.snackbar;

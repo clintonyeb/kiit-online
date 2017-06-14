@@ -6,7 +6,7 @@
                     <div class="img-text">
                         <v-icon large class="white--text">mode_edit</v-icon>
                     </div>
-                    <img src="/assets/avatar-default.png" width="180px">
+                    <img src="/assets/images/avatar-default.png" width="180px">
                 </a>
             </v-flex>
             <v-flex md8 xs12 class="desc">

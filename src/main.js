@@ -47,6 +47,10 @@ const vm = new Vue({
   router,
   store,
   render: h => h(App),
+  beforeDestroy() {
+    this.$uploader.destroy();
+    this.$uploader = null;
+  },
 });
 
 function getCookie(cname) {

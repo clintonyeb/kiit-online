@@ -1,7 +1,7 @@
 <template>
     <div class="comment">
         <a class="avatar">
-            <img :src="mess.user.avatar || '/assets/avatar-default.png'" />
+            <img :src="mess.user.avatar || '/assets/images/avatar-default.png'" />
         </a>
         <div class="content" @click="messageClicked">
             <a class="author" v-tooltip:right="{html: mess.user.userName}">{{mess.user.fullName}}</a>

@@ -124,7 +124,9 @@ export default {
             group: '',
             content: '',
             files: [],
-            step: 2,
+            step: 0,
+            sentFiles: [],
+            errorFiles: [],
         }
     },
     methods: {
@@ -132,7 +134,6 @@ export default {
             switch (this.currStep) {
                 case 0:
                     let type = this.type;
-                    console.log(type);
                     if (type === '' || type === null) {
                         return;
                     }
@@ -145,27 +146,11 @@ export default {
                     break;
                 case 2:
                     // send files here
-                    this.$uploader.submitFiles(this.files, (err, res) => {
-
-                    });
+                    this.$uploader.submitFiles(this.files);
 
                     // add file paths to data before sending
                     // send data
-                    let data = {
-                        title: this.title,
-                        date: this.date,
-                        group: this.group,
-                        content: this.content || '',
-                        files: [],
-                        userName: this.$store.state.user.userName,
-                        type: this.type,
-                    }
-                    this.$socket.emit('post', data, (err, res) => {
-                        if (res === 'done') {
-                            this.$router.push('/');
-                        }
-                    });
-                    this.step = 3;
+
                     break;
                 default:
                     break;
@@ -200,24 +185,58 @@ export default {
             this.$refs.doc.classList.remove('drag-over');
         },
         registerUploadEvents() {
-            this.$uploader.addEventListener('start', (event) => {
-                console.log('start', event.file);
+            this.$uploader.addEventListener('start', this.uploadStart);
+            this.$uploader.addEventListener('progress', this.uploadProgress);
+            this.$uploader.addEventListener('complete', this.uploadComplete);
+            this.$uploader.addEventListener('error', this.uploadError);
+        },
+        uploadStart(event) {
+            // console.log('start');
+        },
+        uploadProgress(event) {
+            // this.files = this.files.fil
+        },
+        uploadComplete(event) {
+            if (event.success) {
+                this.sentFiles.push(event.file);
+                return this.checkCompleted();
+            }
+        },
+        uploadError(event) {
+            this.errorFiles.push(event.file);
+            return this.checkCompleted();
+        },
+        checkCompleted() {
+            if (this.sentFiles.length + this.errorFiles.length === this.files.length) {
+                // completed
+                if (this.errorFiles.length == 0) {
+                    return this.sendPost();
+                }
+                return this.showError();
+            }
+            return;
+        },
+        sendPost() {
+            let files = this.files.map((file) => {
+                return file.name;
+            })
+            let data = {
+                title: this.title,
+                date: this.date,
+                group: this.group,
+                content: this.content || '',
+                files: files,
+                userName: this.$store.state.user.userName,
+                type: this.type,
+            }
+            this.$socket.emit('post', data, (err, res) => {
+                if (res === 'done') {
+                    this.$router.push('/');
+                }
             });
-            this.$uploader.addEventListener('progress', (event) => {
-                console.log('progress', event);
-            });
-            this.$uploader.addEventListener('load', (event) => {
-                console.log('load', event);
-            });
-            this.$uploader.addEventListener('choose', (event) => {
-                console.log('load', event.files);
-            });
-            this.$uploader.addEventListener('complete', (event) => {
-                console.log('complete', event.file, event.success, event.detail);
-            });
-            this.$uploader.addEventListener('error', (event) => {
-                console.log('error', event);
-            });
+        },
+        showError() {
+            console.log('showing error');
         },
         formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
 
@@ -235,6 +254,15 @@ export default {
         currStep() {
             return this.step;
         }
+    },
+    created() {
+        this.registerUploadEvents();
+    },
+    beforeDestroy() {
+        this.$uploader.removeEventListener('start', this.uploadStart);
+        this.$uploader.removeEventListener('progress', this.uploadProgress);
+        this.$uploader.removeEventListener('complete', this.uploadComplete);
+        this.$uploader.removeEventListener('error', this.uploadError);
     }
 }
 </script>

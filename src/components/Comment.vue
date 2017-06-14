@@ -19,7 +19,7 @@
                   </div>
                   <div class="extra images" v-for="file in post.files" :key="file">
                     <a>
-                      <img :src="file">
+                      <img :src="`/assets/previews/${file}`">
                     </a>
                   </div>
                 </div>
@@ -122,20 +122,6 @@ export default {
   overflow-x: hidden;
 }
 
-
-
-
-
-
-
-
-
-
-/*.comments {
-  display: flex;
-  flex-direction: column-reverse;
-}*/
-
 .feed,
 .comments,
 .title {
@@ -146,5 +132,14 @@ export default {
 .flex-comments {
   position: relative !important;
   width: inherit !important;
+}
+
+
+.extra.images {
+  display: inline-block;
+}
+
+.extra.images img {
+  height: 70px;
 }
 </style>
