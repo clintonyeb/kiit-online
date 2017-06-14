@@ -84,7 +84,7 @@ const mutations = {
       comment[postId] = {};
       comment[postId].items = [];
     }
-    comment[postId].items.push(payload);
+    comment[postId].items.unshift(payload);
   },
 };
 

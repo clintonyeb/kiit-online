@@ -15,7 +15,7 @@
     <div class="progress" v-if="progress.shown">
       <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
     </div>
-    <router-view name="footer"></router-view>
+    <!--<router-view name="footer"></router-view>-->
   </v-app>
 </template>
 

@@ -2,19 +2,24 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import { sync } from 'vuex-router-sync';
 import VueTimeago from 'vue-timeago';
-import VueSocketIO from 'vue-socket.io';
 import socketio from 'socket.io-client';
 import App from './App.vue';
 import store from './store';
 import router from './routes';
+import VueSocketIO from './directives/socketio/';
+import SocketIOFileUpload from '../node_modules/socketio-file-upload/client';
 
 let token = getCookie('token');
 if (!token) {
   token = localStorage.getItem('token');
 }
 
+
 const origin = window.location.origin;
 const socket = socketio(`${origin}?token=${token}`);
+
+const uploader = new SocketIOFileUpload(socket);
+Vue.prototype.$uploader = uploader;
 Vue.use(VueSocketIO, socket, store);
 Vue.use(Vuetify);
 

@@ -77,8 +77,6 @@
 
 <script>
 
-import { Uploader } from '../store/api.js';
-
 export default {
     name: 'create',
     data() {
@@ -126,8 +124,7 @@ export default {
             group: '',
             content: '',
             files: [],
-            uploader: null,
-            step: 0,
+            step: 2,
         }
     },
     methods: {
@@ -148,9 +145,9 @@ export default {
                     break;
                 case 2:
                     // send files here
-                    /*this.uploader.sendFiles(this.files, (err, res) => {
+                    this.$uploader.submitFiles(this.files, (err, res) => {
 
-                    });*/
+                    });
 
                     // add file paths to data before sending
                     // send data
@@ -202,6 +199,26 @@ export default {
         dragLeave(event) {
             this.$refs.doc.classList.remove('drag-over');
         },
+        registerUploadEvents() {
+            this.$uploader.addEventListener('start', (event) => {
+                console.log('start', event.file);
+            });
+            this.$uploader.addEventListener('progress', (event) => {
+                console.log('progress', event);
+            });
+            this.$uploader.addEventListener('load', (event) => {
+                console.log('load', event);
+            });
+            this.$uploader.addEventListener('choose', (event) => {
+                console.log('load', event.files);
+            });
+            this.$uploader.addEventListener('complete', (event) => {
+                console.log('complete', event.file, event.success, event.detail);
+            });
+            this.$uploader.addEventListener('error', (event) => {
+                console.log('error', event);
+            });
+        },
         formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
 
     },
@@ -218,12 +235,6 @@ export default {
         currStep() {
             return this.step;
         }
-    },
-    mounted() {
-        this.uploader = Uploader(this.$socket);
-    },
-    beforeDestroy() {
-        this.uploader.destroy();
     }
 }
 </script>

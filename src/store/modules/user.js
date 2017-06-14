@@ -8,6 +8,8 @@ const state = {
   class: '',
   year: '',
   step: 0,
+  status: '',
+  statusUpdate: '',
 };
 
 const getters = {
@@ -56,6 +58,9 @@ const mutations = {
     state.userName = payload.userName;
     state.fullName = payload.fullName;
     state.avatar = payload.avatar || '';
+    state.class = payload.class;
+    state.status = payload.status;
+    state.statusUpdate = payload.statusUpdate;
   },
   SOCKET_CONNECT(state) {
     // console.log('socket connected');
@@ -72,6 +77,12 @@ const mutations = {
   REMOVE_TOKEN(state, payload) {
     localStorage.removeItem('token');
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  },
+  SOCKET_STATUS(state, payload) {
+    if (payload.userName === state.userName) {
+      state.status = payload.status;
+      state.statusUpdate = payload.time;
+    }
   },
 };
 

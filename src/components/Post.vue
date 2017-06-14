@@ -107,6 +107,10 @@ export default {
     visibility: visible;
     opacity: 1 !important;
 }
+
+.event:hover {
+    box-shadow: 1px 1px 3px #DADADA;
+}
 </style>
 
 

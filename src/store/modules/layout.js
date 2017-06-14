@@ -70,7 +70,6 @@ const actions = {
 const mutations = {
   TOGGLE_DRAWER(state, b) {
     state.sidebar.drawer = typeof b === 'undefined' ? !state.sidebar.drawer : b;
-    console.log('hiden drawer: ', state.sidebar.drawer);
   },
   CHAT_CONTENT(state, data) {
     state.chatInput.content = data;

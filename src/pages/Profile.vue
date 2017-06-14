@@ -1,61 +1,51 @@
 <template>
-    <div>
+    <div class="profile">
         <v-layout row wrap>
             <v-flex md4 xs12 class="img-cont">
                 <a class="darken text-xs-center">
                     <div class="img-text">
                         <v-icon large class="white--text">mode_edit</v-icon>
                     </div>
-                    <img src="/assets/avatar-default.png" width="200px">
+                    <img src="/assets/avatar-default.png" width="180px">
                 </a>
-                <p class="text-xs-center username body-2">{{user.userName}}</p>
             </v-flex>
             <v-flex md8 xs12 class="desc">
-                <p @click="itemClicked('name')" class="item">
-                    <span class="title">
+                <p class="item">
+                    <span class="body-2">
                         Display Name:
                     </span>
-                    <span class="subheading" v-if="!nameEdit">
+                    <span class="body-1">
                         {{user.fullName}}
                     </span>
-                    <span v-else>
-                        <input :value="user.fullName" ref="nameInput" placeholder="Display name">
+                </p>
+                <p class="item">
+                    <span class="body-2">
+                        Username:
                     </span>
-                    <span>
-                        <v-icon dark class="edit" v-if="!nameEdit">mode_edit</v-icon>
+                    <span class="body-1">
+                        {{user.userName}}
                     </span>
                 </p>
                 <p class="item">
-                    <span class="title">
-                        Status:
-                    </span>
-                    <span class="subheading">
-                        {{user.status}}
-                    </span>
-                    <span>
-                        <v-icon dark class="edit">mode_edit</v-icon>
-                    </span>
-                </p>
-                <p class="item">
-                    <span class="title">
-                        Following:
-                    </span>
-                    <span class="subheading">
-                        {{user.followers}}
-                    </span>
-                    <span>
-                        <v-icon dark class="edit">mode_edit</v-icon>
-                    </span>
-                </p>
-                <p class="item">
-                    <span class="title">
+                    <span class="body-2">
                         Class:
                     </span>
-                    <span class="subheading">
-                        {{user.class}}
+                    <span class="body-1">
+                        {{user.class | capitalize}}
                     </span>
-                    <span>
-                        <v-icon dark class="edit">mode_edit</v-icon>
+                </p>
+                <p class="item" @click="dialog = true">
+                    <span class="body-2">
+                        Status:
+                    </span>
+                    <span class="body-1">
+                        {{bio}}
+                    </span> &middot;
+                    <timeago :since="statusDate" class="caption" :auto-update="60" v-if="user.statusUpdate"></timeago>
+                    <span v-tooltip:top="{ html: 'Change status' }">
+                        <v-btn icon class="primary--text">
+                            <v-icon class="edit">mode_edit</v-icon>
+                        </v-btn>
                     </span>
                 </p>
             </v-flex>
@@ -69,6 +59,24 @@
                 </div>
             </v-flex>
         </v-layout>
+        <v-layout row justify-center>
+            <v-dialog v-model="dialog" persistent :width="500">
+                <v-card>
+                    <v-card-row>
+                        <v-card-title class="primary white--text">Change status</v-card-title>
+                    </v-card-row>
+                    <v-card-row>
+                        <v-card-text>
+                            <v-text-field max="125" counter name="status" label="Your status" v-model="status"></v-text-field>
+                        </v-card-text>
+                    </v-card-row>
+                    <v-card-row actions>
+                        <v-btn class="warning--text darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
+                        <v-btn class="primary--text darken-1" flat="flat" @click.native="saveStatus">Save Status</v-btn>
+                    </v-card-row>
+                </v-card>
+            </v-dialog>
+        </v-layout>
     </div>
 </template>
 
@@ -78,28 +86,38 @@ export default {
     name: 'profile',
     data() {
         return {
-            nameEdit: false,
-            statusEdit: false,
-            followingEdit: false,
+            dialog: false,
+            status: '',
         }
     },
     computed: {
         user() {
             return this.$store.state.user;
+        },
+        bio() {
+            return this.user.status || '[No status update so far]';
+        },
+        statusDate() {
+            let time = this.user.statusUpdate;
+            return new Date(Number(time));
         }
     },
     methods: {
-        itemClicked(type) {
-            switch (type) {
-                case 'name':
-                    this.nameEdit = true;
-                    let input = this.$refs['nameInput'];
-                    console.log(input);
-                    break;
-
-                default:
-                    break;
+        saveStatus() {
+            let status = this.status;
+            let userName = this.$store.state.user.userName;
+            let data = {
+                status,
+                userName,
             }
+            this.$socket.emit('status', data, (err, res) => {
+                this.dialog = false;
+            })
+        },
+    },
+    filters: {
+        capitalize(str) {
+            return str.toUpperCase();
         }
     }
 }
@@ -112,6 +130,15 @@ export default {
     margin: 0 auto;
 }
 
+.layout {
+    display: flex;
+}
+
+.flex {
+    justify-content: center;
+    align-self: center;
+}
+
 .username {
     width: 200px;
 }
@@ -119,19 +146,14 @@ export default {
 .divider {
     margin-top: 30px;
     margin-bottom: 30px;
+    height: 1.5px;
 }
 
 .list {
     display: inline-block;
 }
 
-.desc,
 .img-cont {
-    align-self: center;
-}
-
-.img-cont {
-    height: 220px;
     cursor: pointer;
 }
 
@@ -143,31 +165,30 @@ export default {
 
 a.darken {
     display: inline-block;
-    background: black;
+    background-color: rgba(0, 0, 0, 0.4);
     padding: 0;
 }
 
 a.darken img {
     display: block;
     position: relative;
-    -webkit-transition: all 0.5s linear;
-    -moz-transition: all 0.5s linear;
-    -ms-transition: all 0.5s linear;
-    -o-transition: all 0.5s linear;
-    transition: all 0.5s linear;
+    -webkit-transition: all 0.8s linear;
+    -moz-transition: all 0.8s linear;
+    -ms-transition: all 0.8s linear;
+    -o-transition: all 0.8s linear;
+    transition: all 0.8s linear;
 }
 
 a.darken:hover img {
     opacity: 0.8;
 }
 
-.edit {
-    font-size: .8em;
-    line-height: 2;
+.flex {
+    width: 100%;
 }
 
-.item {
-    cursor: pointer;
+.edit {
+    font-size: 15px;
 }
 </style>
 

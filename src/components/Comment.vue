@@ -53,6 +53,7 @@ export default {
     return {
       dialog: false,
       comments: [],
+      commentContainer: null,
     }
   },
   computed: {
@@ -94,7 +95,11 @@ export default {
       this.$emit('hidden');
     },
     submitted(height) {
-      let cont = this.$refs.dialog.$refs.content.firstChild;
+      let cont = this.commentContainer
+        = this.commentContainer
+          ? this.commentContainer :
+          this.$refs.dialog.$refs.content.firstChild;
+
       this.$nextTick(() => {
         cont.scrollTop = cont.scrollHeight + height;
       })
@@ -116,6 +121,8 @@ export default {
   padding: 0 !important;
   overflow-x: hidden;
 }
+
+
 
 
 
