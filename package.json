@@ -1,7 +1,7 @@
 {
   "name": "kiit-online",
   "description": "A Vue.js project",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "author": "Clinton Yeboah <clintonmethis@gmail.com>",
   "private": true,
   "main": "lib/index.js",
