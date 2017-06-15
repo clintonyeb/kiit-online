@@ -16,14 +16,7 @@
             </div>
             <div class="extra images" v-for="file in post.files.slice(0, 6)" :key="file">
                 <img :src="`/assets/previews/${file}`">
-                <div class="img-middle">
-                    <v-btn class="dark--text" icon>
-                        <v-icon dark>file_download</v-icon>
-                    </v-btn>
-                    <!--<span class="faded">{{formatBytes(file.size)}}</span>-->
-                </div>
             </div>
-            <v-divider></v-divider>
             <div class="meta">
                 <a class="like">
                     <img src="/assets/images/chat.svg" class="image icon"> {{comments}}
@@ -46,13 +39,23 @@ export default {
     },
     computed: {
         comments: function () {
-            return this.post.commentsCount ? `${this.post.commentsCount} comments` : 'No comments';
+            let count = Number(this.post.commentsCount);
+
+            if (count === 0) {
+                return 'No comments';
+            }
+            else if (count === 1) {
+                return '1 comment';
+            }
+            else {
+                return `${count} comments`;
+            }
         },
         user() {
             return this.post.user
         },
         avatar() {
-            return this.user.avatar || '/assets/images/avatar-default.png';
+            return `/assets/images/${this.user.avatar}`;
         },
         date() {
             let time = this.post.time;
@@ -122,34 +125,12 @@ export default {
 .extra.images {
     display: inline-block;
     width: 95px;
-    position: relative;
 }
 
 .extra.images img {
     width: 100%;
     padding: 5px;
-    opacity: 1;
     height: auto;
-    transition: .5s ease;
-    backface-visibility: hidden;
-}
-
-.extra.images .img-middle {
-    transition: .5s ease;
-    opacity: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%)
-}
-
-.extra.images:hover img {
-    opacity: 0.3;
-}
-
-.extra.images:hover .img-middle {
-    opacity: 1;
 }
 </style>
 

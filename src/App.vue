@@ -44,7 +44,7 @@ export default {
       return this.user.fullName;
     },
     avatar() {
-      return this.user.avatar || '/assets/images/avatar-default.png'
+      return this.user.avatar;
     },
     snackbar() {
       return this.$store.state.layout.snackbar;
@@ -57,14 +57,6 @@ export default {
     }
   },
   sockets: {
-    chat(payload) {
-      if (payload.userName == this.userName) {
-        console.log('message sent');
-      } else {
-        this.$store.commit('CHATS_ADD', payload);
-        this.$store.dispatch('CHAT_NOTIFY', payload);
-      }
-    },
     auth(payload) {
       if (payload == 401) {
         return this.$router.replace('/login');

@@ -12,6 +12,9 @@ const actions = {
     message.user = user;
     context.commit('CHATS_ADD', message);
   },
+  socket_chat(context, payload) {
+    context.commit('CHATS_ADD', payload);
+  },
 };
 
 
@@ -48,28 +51,3 @@ export default {
   mutations,
   actions,
 };
-
-function compare(a, b) {
-  if (!a.time) {
-    return 1;
-  }
-  if (!b.time) {
-    return -1;
-  }
-  if (a.time < b.time) {
-    return -1;
-  } else if (a.time > b.time) {
-    return 1;
-  }
-  return 0;
-}
-
-function addChat(oldChats, newChats) {
-  if (!Array.isArray(newChats)) {
-    newChats = [newChats];
-  }
-  const chats = [...oldChats, ...newChats];
-  return chats.sort(compare);
-}
-
-

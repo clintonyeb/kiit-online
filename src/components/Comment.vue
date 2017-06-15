@@ -18,9 +18,15 @@
                     <span v-if="post.content">{{post.content}}</span>
                   </div>
                   <div class="extra images" v-for="file in post.files" :key="file">
-                    <a>
-                      <img :src="`/assets/previews/${file}`">
-                    </a>
+                    <img :src="`/assets/previews/${file}`">
+                    <div class="img-middle">
+                      <a download :href="`/assets/uploads/${file}`">
+                        <v-btn class="dark--text" icon>
+                          <v-icon dark>file_download</v-icon>
+                        </v-btn>
+                      </a>
+                      <!--<span class="faded">{{formatBytes(file.size)}}</span>-->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -134,12 +140,40 @@ export default {
   width: inherit !important;
 }
 
+.extra.images img {
+  height: 70px;
+}
 
 .extra.images {
   display: inline-block;
+  width: 95px;
+  position: relative;
 }
 
 .extra.images img {
-  height: 70px;
+  width: 100%;
+  padding: 5px;
+  opacity: 1;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.extra.images .img-middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+}
+
+.extra.images:hover img {
+  opacity: 0.3;
+}
+
+.extra.images:hover .img-middle {
+  opacity: 1;
 }
 </style>

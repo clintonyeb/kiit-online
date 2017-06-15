@@ -86,7 +86,7 @@ export default {
 }
 
 .cover {
-    background-image: url('/assets/mypic.jpeg');
+    background-image: url('/assets/images/mypic.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
 }

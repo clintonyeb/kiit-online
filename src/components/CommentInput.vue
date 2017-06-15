@@ -50,13 +50,16 @@ export default {
         return false;
       };
 
-      let userName = this.$store.state.user.userName;
+      let user = this.$store.state.user;
+      let userName = user.userName;
+      let _class = user.class;
 
       let data = {
         postId: this.postId,
         content: text,
         userName: userName,
         time: new Date().getTime(),
+        class: _class,
       };
 
       this.$socket.emit('comment', data, (err, res) => {

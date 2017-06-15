@@ -57,7 +57,7 @@ export default {
             return this.user.fullName || 'Full name';
         },
         avatar() {
-            return this.user.avatar || '/assets/images/avatar-default.png';
+            return `/assets/images/${this.user.avatar}`;
         },
         user() {
             return this.$store.state.user;
