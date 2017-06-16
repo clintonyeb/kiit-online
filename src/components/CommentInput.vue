@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { Picker } from 'emoji-mart-vue'
-import { Emoji } from 'emoji-mart-vue'
 
 export default {
   props: ['postId'],
@@ -32,9 +30,6 @@ export default {
     this.isMobile = window.innerWidth <= 800;
   },
   computed: {
-  },
-  components: {
-    Picker, Emoji
   },
   methods: {
     preventNewLine(event) {

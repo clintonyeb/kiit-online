@@ -1,10 +1,14 @@
 <template>
     <div class="comment">
         <a class="avatar">
-            <img :src="`/assets/images/${mess.user.avatar}`" />
+            <router-link :to="`/profile/${mess.user.userName}`">
+                <img :src="`/assets/avatars/${mess.user.avatar}`" />
+            </router-link>
         </a>
-        <div class="content" @click="messageClicked">
-            <a class="author" v-tooltip:right="{html: mess.user.userName}">{{mess.user.fullName}}</a>
+        <div class="content">
+            <router-link :to="`/profile/${mess.user.userName}`" class="author" v-tooltip:right="{html: mess.user.userName}">
+                {{mess.user.fullName}}
+            </router-link>
             <div class="metadata">
                 <v-icon class="primary--text text--darken-2">bubble_chart</v-icon>
                 <timeago :since="date" class="date" :auto-update="60"></timeago>

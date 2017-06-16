@@ -21,6 +21,7 @@ const getters = {
       email: state.email,
       class: state.class,
       year: state.year,
+      avatar: state.avatar,
     };
   },
 };
@@ -83,6 +84,9 @@ const mutations = {
       state.status = payload.status;
       state.statusUpdate = payload.time;
     }
+  },
+  CHANGE_AVATAR(state, payload) {
+    state.avatar = payload;
   },
 };
 

@@ -28,7 +28,7 @@
     
             <v-list-item v-for="item in sidebar.items" :key="item">
                 <router-link :to="item.path">
-                    <v-list-tile :class="{'primary lighten-2 white--text': $route.name == item.name}">
+                    <v-list-tile :class="{'primary lighten-2 white--text': $route.name.search(item.name) !== -1 }">
                         <v-list-tile-action>
                             <v-icon :class="{'white--text': $route.name == item.name}">{{ item.icon }}</v-icon>
                         </v-list-tile-action>
@@ -57,7 +57,7 @@ export default {
             return this.user.fullName || 'Full name';
         },
         avatar() {
-            return `/assets/images/${this.user.avatar}`;
+            return `/assets/avatars/${this.user.avatar}`;
         },
         user() {
             return this.$store.state.user;

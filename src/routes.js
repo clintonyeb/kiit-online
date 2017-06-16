@@ -37,6 +37,21 @@ export default new VueRouter({
       redirect: '/',
     },
     {
+      path: '/profile/:userName',
+      name: 'profile2',
+      components: {
+        default: loadPage('Profile'),
+        sideBar: loadComponent('Sidebar'),
+        toolBar: loadComponent('Toolbar'),
+        // footer: loadComponent('Footer'),
+      },
+      props: {
+        default: true,
+        sideBar: false,
+        toolBar: false,
+      },
+    },
+    {
       path: '/profile',
       name: 'profile',
       components: {
@@ -84,18 +99,6 @@ export default new VueRouter({
         toolBar: loadComponent('Toolbar'),
         chatInput: loadComponent('ChatInput'),
       },
-    },
-    {
-      path: '/comments/:commentId',
-      name: 'comments',
-      components: {
-        default: loadPage('Comment'),
-        sideBar: loadComponent('Sidebar'),
-        toolBar: loadComponent('Toolbar'),
-        chatInput: loadComponent('ChatInput'),
-        // footer: loadComponent('Footer'),
-      },
-      props: true,
     },
     {
       path: '/login',

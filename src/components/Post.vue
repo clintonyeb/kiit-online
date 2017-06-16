@@ -1,13 +1,15 @@
 <template>
     <div class="event" @click.stop="postClicked">
         <div class="label">
-            <img :src="avatar">
+            <router-link :to="`/profile/${user.userName}`">
+                <img :src="avatar">
+            </router-link>
         </div>
         <div class="content">
             <div class="summary">
-                <a class="user">
+                <router-link class="user" :to="`/profile/${user.userName}`">
                     {{user.fullName}}
-                </a> added a new lecture slide
+                </router-link> added a new lecture slide
                 <timeago :since="date" class="date" :auto-update="60"></timeago>
             </div>
             <div class="extra text">
@@ -55,7 +57,7 @@ export default {
             return this.post.user
         },
         avatar() {
-            return `/assets/images/${this.user.avatar}`;
+            return `/assets/avatars/${this.user.avatar}`;
         },
         date() {
             let time = this.post.time;

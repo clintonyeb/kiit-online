@@ -48,6 +48,7 @@ export default {
                 case 'index':
                 case 'index2':
                     return 'Home';
+                case 'profile2':
                 case 'profile':
                     return 'Profile';
                 case 'settings':

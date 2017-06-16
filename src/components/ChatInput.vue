@@ -3,7 +3,7 @@
     
         <input type="file" name="file" @change="onChange" style="visibility:hidden;">
     
-        <picker :title="picker.title" :skin="picker.skin" :color="picker.color" :sheetSize="picker.sheetSize" v-show="picker.shown" @click="emojiSelected" :emoji="picker.emoji" class="emoji"></picker>
+        <!--<picker :title="picker.title" :skin="picker.skin" :color="picker.color" :sheetSize="picker.sheetSize" v-show="picker.shown" @click="emojiSelected" :emoji="picker.emoji" class="emoji"></picker>-->
     
         <v-btn class="emoji-picker" icon :class="{ 'primary--text': picker.shown }" @click.native="$store.commit('TOGGLE_PICKER')">
             <v-icon light>insert_emoticon</v-icon>
@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import { Picker } from 'emoji-mart-vue'
-import { Emoji } from 'emoji-mart-vue'
 
 export default {
     name: 'chat-input',
@@ -59,9 +57,6 @@ export default {
                 return 3;
             }
         }
-    },
-    components: {
-        Picker, Emoji
     },
     methods: {
         emojiSelected: function (emoji, event) {
