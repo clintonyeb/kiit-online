@@ -1,122 +1,81 @@
 <template>
-    <div class="profile" v-if="profile">
-        <v-layout row wrap>
-            <v-flex md4 xs12 class="img-cont" @click="perm ? showEditor() : 0">
-                <a class="darken text-xs-center">
-                    <div class="img-text" v-if="perm">
-                        <v-icon large class="white--text">mode_edit</v-icon>
+    <v-card hover raised>
+        <v-card-text class="pa-5 grey lighten-4 text--darken-4">
+            <v-layout row wrap>
+                <v-flex md4 xs12>
+                    <div class="imageCont">
+                        <div style="width:180px; margin: 0 auto;">
+                            <img :src="avatar" width="180px">
+                        </div>
+                        <div style="width:180px; margin: 0 auto;">
+                            <v-btn v-if="perm" class="primary avatarBtn" light @click.native="showEditor">
+                                Change Avatar
+                            </v-btn>
+                        </div>
                     </div>
+                </v-flex>
     
-                    <img :src="avatar" width="180px">
-                </a>
-            </v-flex>
-            <v-flex md8 xs12 class="desc">
-                <p class="item">
-                    <span class="body-2">
-                        Display Name:
-                    </span>
-                    <span class="body-1">
-                        {{profile.fullName}}
-                    </span>
-                </p>
-                <p class="item">
-                    <span class="body-2">
-                        Username:
-                    </span>
-                    <span class="body-1">
-                        {{profile.userName}}
-                    </span>
-                </p>
-                <p class="item">
-                    <span class="body-2">
-                        Class:
-                    </span>
-                    <span class="body-1">
-                        {{profile.class | capitalize}}
-                    </span>
-                </p>
-                <p class="item" @click="perm ? dialog = true : 0">
-                    <span class="body-2">
-                        Status:
-                    </span>
-                    <span class="body-1">
-                        {{bio}}
-                    </span> &middot;
-                    <timeago :since="statusDate" class="caption" :auto-update="60" v-if="profile.statusUpdate"></timeago>
-                    <span v-tooltip:top="{ html: 'Change status' }" v-if="perm">
-                        <v-btn icon class="primary--text">
-                            <v-icon class="edit">mode_edit</v-icon>
-                        </v-btn>
-                    </span>
-                </p>
-            </v-flex>
-        </v-layout>
-        <v-divider class="divider"></v-divider>
-        <v-layout row wrap v-if="perm">
-            <v-flex xs12>
-                <h6 class="title">Activity Feed</h6>
-                <div>
-                    Activity 1
-                </div>
-            </v-flex>
-        </v-layout>
+                <v-flex md7 xs12>
+                    <div class="textCont text-xs-center">
+                        <p class="item">
+                            <span class="display-1">
+                                {{profile.fullName}}
+                            </span>
+                        </p>
+                        <p class="item">
+                            <span class="title">
+                                {{profile.userName}}
+                            </span>
+                        </p>
+                        <p class="item">
+                            <span class="title">
+                                {{profile.class | capitalize}}
+                            </span>
+                        </p>
+                    </div>
+                </v-flex>
+            </v-layout>
+        </v-card-text>
         <v-layout row justify-center>
-            <v-dialog v-model="dialog" persistent :width="500">
+            <v-dialog v-model="imgDialog" persistent :width="600" :height="200">
                 <v-card>
                     <v-card-row>
-                        <v-card-title class="primary white--text">Change status</v-card-title>
+                        <v-card-title class="primary white--text">Upload avatar</v-card-title>
                     </v-card-row>
-                    <v-card-row>
-                        <v-card-text>
-                            <v-text-field max="125" counter name="status" label="Your status" v-model="status"></v-text-field>
-                        </v-card-text>
-                    </v-card-row>
-                    <v-card-row actions>
-                        <v-btn class="warning--text darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
-                        <v-btn class="primary--text darken-1" flat="flat" @click.native="saveStatus">Save Status</v-btn>
-                    </v-card-row>
-                </v-card>
-            </v-dialog>
-        </v-layout>
-        <v-layout row justify-center>
-            <v-dialog v-model="imgDialog" persistent :width="500" :height="900">
-                <v-card>
-                    <v-card-row class="cont">
+                    <v-card-row class="cont pa-5">
                         <div class="editorCont">
                             <img ref="editor" id="editor" :src="avatar">
                         </div>
-    
                         <div>
-                            <v-btn>
+                            <v-btn class="primary" light>
                                 Upload Avatar
                                 <input type="file" name="file" id="file" @change="onChange">
                             </v-btn>
-                            <v-btn>
+                            <v-btn class="red" light>
                                 Remove Avatar
                             </v-btn>
                         </div>
     
                     </v-card-row>
                     <v-card-text>
-                        <v-slider v-model="zoom" dark :max="100" :min="0" :step="5"></v-slider>
+                        <v-slider v-model="zoom" dark :max="10" :min="0" :step="1"></v-slider>
                     </v-card-text>
                     <v-card-row actions>
-                        <v-btn class="darken-1" flat="flat" @click.native="hideEditor(false)">Cancel</v-btn>
-                        <v-btn class="darken-1" flat="flat" @click.native="hideEditor(true)">Save Changes</v-btn>
+                        <v-btn class="red" light @click.native="hideEditor(false)" style="margin: 0 10px 0 0">Cancel</v-btn>
+                        <v-btn class="primary" light @click.native="hideEditor(true)" style="margin:0 10px 0 10px">Save Changes</v-btn>
                     </v-card-row>
                 </v-card>
             </v-dialog>
         </v-layout>
-    </div>
+    </v-card>
 </template>
 
 <script>
-
 import Cropper from 'cropperjs';
 
 export default {
     name: 'profile',
-    props: ['userName'],
+    props: ['userName', 'display'],
     data() {
         return {
             dialog: false,
@@ -125,7 +84,7 @@ export default {
             imgDialog: false,
             uploadImg: '',
             cropper: null,
-            zoom: 50,
+            zoom: 5,
             avatarProps: null,
             perm: false,
             profile: null,
@@ -140,7 +99,7 @@ export default {
             return new Date(Number(time));
         },
         avatar() {
-            return `/assets/avatars/${this.profile.avatar}`;
+            return this.profile.avatar ? `/assets/dp/${this.profile.avatar}` : `/assets/avatars/${this.profile.avatar}`;
         },
     },
     methods: {
@@ -156,6 +115,7 @@ export default {
             })
         },
         onChange(event) {
+            this.zoom = 5;
             let file = event.target.files[0];
             this.file = file;
             this.readURL(file);
@@ -192,6 +152,7 @@ export default {
             }
 
             this.$socket.emit('avatar', data, (err, res) => {
+                this.profile.avatar = this.file.name;
                 this.$store.commit('CHANGE_AVATAR', this.file.name);
             });
         },
@@ -213,6 +174,7 @@ export default {
             this.cropper.reset();
             this.cropper.clear();
             this.cropper.destroy();
+            this.zoom = 5;
             if (opt && this.file) {
                 this.$uploader.submitFiles([this.file]);
             }
@@ -254,7 +216,7 @@ export default {
     watch: {
         zoom(v) {
             if (this.cropper) {
-                this.cropper.zoomTo(v / 50);
+                this.cropper.zoomTo(v / 5);
             }
         },
         uploadImg(url) {
@@ -264,19 +226,23 @@ export default {
         }
     }
 }
+
 </script>
 
 <style scoped>
 @import '../assets/cropper.css';
 
-.card {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
+.imageCont {
+    display: block;
 }
 
-.layout {
-    display: flex;
+.imageCont img {
+    border-radius: 10px;
+}
+
+.avatarBtn {
+    margin: 0 auto;
+    width: 180px;
 }
 
 .flex {
@@ -284,79 +250,10 @@ export default {
     align-self: center;
 }
 
-.username {
-    width: 200px;
-}
-
-.divider {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    height: 1.5px;
-}
-
-.list {
-    display: inline-block;
-}
-
-.img-cont {
-    cursor: pointer;
-}
-
-.img-text {
-    position: absolute;
-    top: 100px;
-    left: 100px;
-}
-
-a.darken {
-    display: inline-block;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 0;
-}
-
-a.darken img {
-    display: block;
-    position: relative;
-    -webkit-transition: all 0.8s linear;
-    -moz-transition: all 0.8s linear;
-    -ms-transition: all 0.8s linear;
-    -o-transition: all 0.8s linear;
-    transition: all 0.8s linear;
-}
-
-a.darken:hover img {
-    opacity: 0.8;
-}
-
-.flex {
-    width: 100%;
-}
-
-.edit {
-    font-size: 15px;
-}
-
-.img-cont {
-    position: relative;
-}
-
-
-.editorCont {
-    width: 200px;
-    height: 200px;
-    margin: 30px 30px;
-}
-
-#editor {
-    max-width: 100%;
-}
-
-.cont {
-    margin: 20px auto;
-}
-
-.btn {
-    position: relative;
+@media only screen and (max-device-width: 768px) {
+    .textCont {
+        margin-top: 20px !important;
+    }
 }
 
 input[type="file"] {
@@ -368,6 +265,16 @@ input[type="file"] {
     cursor: pointer !important;
     opacity: 0;
     z-index: 1;
+}
+
+.editorCont {
+    width: 200px;
+    height: 200px;
+    margin: 30px 30px;
+}
+
+#editor {
+    max-width: 100%;
 }
 </style>
 

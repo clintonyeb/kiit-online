@@ -62,6 +62,7 @@ const mutations = {
     state.class = payload.class;
     state.status = payload.status;
     state.statusUpdate = payload.statusUpdate;
+    state.email = payload.email;
   },
   SOCKET_CONNECT(state) {
     // console.log('socket connected');
