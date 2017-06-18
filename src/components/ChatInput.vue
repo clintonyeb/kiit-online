@@ -25,6 +25,7 @@ export default {
     data() {
         return {
             isMobile: true,
+            messId: 1,
         }
     },
     created() {
@@ -85,10 +86,15 @@ export default {
             let data = {
                 content: text,
                 userName: userName,
-                time: new Date().getTime(),
+                id: this.messId++,
             };
 
-            this.$socket.emit('chat', data);
+            this.$socket.emit('chat', data, (err, resId) => {
+                console.log(err, resId);
+                if (!err && resId) {
+                    this.$store.commit('SET_TIME', resId);
+                }
+            });
             this.$store.dispatch('addChat', data);
             this.$store.commit('CLEAR_CHAT_INPUT');
         },

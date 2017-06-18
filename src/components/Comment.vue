@@ -18,7 +18,7 @@
                     <span v-if="post.content">{{post.content}}</span>
                   </div>
                   <div class="extra images" v-for="file in post.files" :key="file">
-                    <img :src="`/assets/previews/${file}`">
+                    <img :src="preview(file)">
                     <div class="img-middle">
                       <a download :href="`/assets/uploads/${file}`">
                         <v-btn class="dark--text" icon>

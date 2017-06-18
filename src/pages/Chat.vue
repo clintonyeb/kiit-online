@@ -2,7 +2,7 @@
     <div id="chat-container" ref="chat-container">
         <v-progress-circular v-if="loading" indeterminate class="primary--text prog"></v-progress-circular>
         <div class="ui minimal comments" id="chat">
-            <message v-for="mess in chat" :key="mess" :mess="mess" class="mess"></message>
+            <message v-for="mess in chat" :key="mess.time" :mess="mess" class="mess"></message>
         </div>
     </div>
 </template>
@@ -68,7 +68,7 @@ export default {
                 return;
             }
 
-            if (offset === 0) this.$store.commit('PROGRESS_SHOW', true);
+            if (offset === 0) this.$store.commit('SHOW_PROGRESS', true);
             else this.$store.commit('START_LOADING', true);
 
             this.$socket.emit('getChats', {
@@ -77,7 +77,7 @@ export default {
             }, (err, res) => {
                 // start load, so scroll to bottom
                 if (offset === 0) {
-                    this.$store.commit('PROGRESS_SHOW', false);
+                    this.$store.commit('SHOW_PROGRESS', false);
                     this.container.scrollTop = this.container.scrollHeight;
                 } else {
                     setTimeout(() => {

@@ -3,7 +3,7 @@
     
         <v-stepper v-model="currStep" class="page-content">
             <v-stepper-header>
-                <v-stepper-step step="0" :complete="currStep > 0">Choose post type</v-stepper-step>
+                <v-stepper-step step="0" :complete="currStep > 0">Choose type</v-stepper-step>
                 <v-divider></v-divider>
                 <v-stepper-step step="1" :complete="currStep > 1">Add details</v-stepper-step>
                 <v-divider></v-divider>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import Validator from '../directives/validator.js'
+import Validator from '../mixins/validator.js'
 
 
 export default {
@@ -212,11 +212,11 @@ export default {
 
                     break;
                 case 2:
+                    this.showProgress('Uploading files');
                     // send files here
                     let files = this.files.map((f) => {
                         return f.file;
                     })
-                    console.log(files);
                     this.$uploader.submitFiles(files);
                     break;
                 default:
@@ -286,6 +286,7 @@ export default {
         checkCompleted() {
             if (this.sentFiles.length + this.errorFiles.length === this.files.length) {
                 // completed
+                this.hideProgress();
                 if (this.errorFiles.length == 0) {
                     return this.sendPost();
                 }
@@ -306,8 +307,11 @@ export default {
                 userName: this.$store.state.user.userName,
                 type: this.type,
             }
+            this.showProgress('Submitting post');
             this.$socket.emit('post', data, (err, res) => {
-                if (res === 'done') {
+                this.hideProgress();
+                if (res !== 'error') {
+                    this.$store.commit('SOCKET_POSTMORE', res);
                     this.$router.push('/');
                 }
             });
@@ -315,8 +319,6 @@ export default {
         showError() {
             console.log('showing error');
         },
-        formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
-
     },
     computed: {
         btnText() {

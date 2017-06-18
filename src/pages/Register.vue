@@ -40,6 +40,7 @@
                     <ul>
                         <li v-for="item in agrees">{{item}}</li>
                     </ul>
+                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </p>
             </v-stepper-content>
         </v-stepper>
@@ -53,7 +54,7 @@
 
 <script>
 
-import Validator from '../directives/validator.js'
+import Validator from '../mixins/validator.js'
 import { validateRollNumber, postAccountDetails } from '../store/api.js';
 
 export default {
@@ -135,7 +136,9 @@ export default {
                         return;
                     }
 
+                    this.showProgress();
                     validateRollNumber(userName, (err, res) => {
+                        this.hideProgress();
                         if (err) {
                             if (err.response.status === 409) {
                                 this.alert.message = 'It appears you already have an account, please login instead';
@@ -220,12 +223,15 @@ export default {
                         class: reg.class,
                         year: reg.year,
                     }
+                    this.showProgress();
                     postAccountDetails(data, (err, res) => {
+                        this.hideProgress();
                         if (err) {
                             this.alert.message = 'Could not register account';
                             this.alert.shown = true;
                         } else {
                             this.alert.shown = false;
+                            this.$store.commit('SET_LOGIN_MESSAGE', 'Registration successful, now you login');
                             this.$router.replace('/login');
                         }
                     })

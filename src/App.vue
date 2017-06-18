@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <!--<div class="dimmer" v-seen="progress.shown"></div>-->
     <router-view name="sideBar"></router-view>
     <router-view name="toolBar"></router-view>
     <main>
@@ -13,7 +14,10 @@
       <v-btn flat class="pink--text" @click.native="snackbar.shown = false">Close</v-btn>
     </v-snackbar>
     <div class="progress" v-if="progress.shown">
-      <v-progress-circular indeterminate v-bind:size="50" class="primary--text"></v-progress-circular>
+      <div>
+        <v-progress-circular indeterminate v-bind:size="50" class="primary--text prog"></v-progress-circular>
+        <p v-if="progress.message">{{}progress.message}</p>
+      </div>
     </div>
     <!--<router-view name="footer"></router-view>-->
   </v-app>
@@ -36,18 +40,6 @@ export default {
     }
   },
   computed: {
-    user() {
-      return this.$store.state.user;
-    },
-    userName() {
-      return this.user.userName;
-    },
-    fullName() {
-      return this.user.fullName;
-    },
-    avatar() {
-      return this.user.avatar;
-    },
     snackbar() {
       return this.$store.state.layout.snackbar;
     },
@@ -56,7 +48,7 @@ export default {
     },
     notPadded() {
       return this.$route.name === 'chat';
-    }
+    },
   },
 }
 
@@ -88,10 +80,23 @@ a {
 }
 
 .progress {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99999;
+    pointer-events: all;
+    cursor: wait;
+    margin: 0;
+    padding: 0;
+   
+}
+
+.prog {
+   position: absolute;
+   top: 45%;
+   left: 45%;
 }
 
 #main-container {
@@ -105,6 +110,7 @@ a {
 .padded {
       padding-top: 1rem;
 } 
+
 </style>
 
 

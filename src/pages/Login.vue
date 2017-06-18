@@ -25,7 +25,7 @@
             </v-card-text>
         </v-card>
         <div class="page-content">
-            <v-alert warning dismissible v-model="alert.shown">
+            <v-alert :warning="!alert.color" :primary="alert.color" dismissible v-model="alert.shown">
                 {{alert.message}}
             </v-alert>
         </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Validator from '../directives/validator.js';
+import Validator from '../mixins/validator.js';
 import { loginUser } from '../store/api.js';
 
 export default {
@@ -44,7 +44,8 @@ export default {
             password: '',
             alert: {
                 shown: false,
-                message: ''
+                message: '',
+                color: false
             },
             userErrors: [],
             passErrors: [],
@@ -52,12 +53,19 @@ export default {
     },
     created: function () {
         this.$store.commit('REMOVE_TOKEN');
+        let message = this.$store.state.user.loginMessage;
+        if (message) {
+            this.alert.color = true;
+            this.alert.message = message;
+            this.alert.shown = true;
+        }
     },
     methods: {
         submit() {
             // clear old errors
             this.userErrors = [];
             this.passErrors = [];
+            this.alert.shown = false;
 
             // validate username
             let username = this.username;
@@ -85,18 +93,23 @@ export default {
                 return;
             }
 
-            // attempt login
+            // start progress
+            this.showProgress();
+
+            // attempt login            
             loginUser({
                 userName: username,
                 password: password
             }, (err, res) => {
                 if (err) {
+                    this.hideProgress();
                     // clear password
                     this.password = '';
                     this.$refs['password'].focus();
 
                     // show alert message
                     this.alert.message = 'Incorrect username and password';
+                    this.alert.color = false;
                     this.alert.shown = true;
                     return;
                 }

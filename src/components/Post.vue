@@ -17,7 +17,7 @@
                 <span v-if="post.content">{{content}}</span>
             </div>
             <div class="extra images" v-for="file in post.files.slice(0, 6)" :key="file">
-                <img :src="`/assets/previews/${file}`">
+                <img :src="preview(file)">
             </div>
             <div class="meta">
                 <a class="like">
@@ -64,20 +64,18 @@ export default {
             return new Date(Number(time));
         },
         content() {
-            let parts = this.post.content.split('.');
+            /*let parts = this.post.content.split('.');
             let text = parts.slice(0, 2).join('. ').trim() + '.';
             if (parts.length > 2) {
                 text = `${text}..`;
-            }
-            return text;
-        }
+            }*/
+            return this.post.content;
+        },
     },
     methods: {
         postClicked(event) {
             this.$emit('clicked', this.post.id);
         },
-        formatBytes(a, b) { if (0 == a) return "0 Bytes"; var c = 1e3, d = b || 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] },
-
     },
 }
 </script>

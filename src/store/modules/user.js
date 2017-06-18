@@ -10,6 +10,7 @@ const state = {
   step: 0,
   status: '',
   statusUpdate: '',
+  loginMessage: '',
 };
 
 const getters = {
@@ -89,6 +90,9 @@ const mutations = {
   },
   CHANGE_AVATAR(state, payload) {
     state.avatar = payload;
+  },
+  SET_LOGIN_MESSAGE(state, payload) {
+    state.loginMessage = payload;
   },
 };
 

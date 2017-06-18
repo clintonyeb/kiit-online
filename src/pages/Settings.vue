@@ -15,7 +15,7 @@
                     </v-list-tile-action>
                     <v-list-tile-content>
                         <v-list-tile-title>Recovery email - {{user.email}}</v-list-tile-title>
-                        <v-list-tile-sub-title>Click to account your
+                        <v-list-tile-sub-title>Click to change your
                             <i>recovery email address</i>
                         </v-list-tile-sub-title>
                     </v-list-tile-content>
@@ -124,7 +124,7 @@
 <script>
 
 import Profile from './Profile.vue';
-import Validator from '../directives/validator.js'
+import Validator from '../mixins/validator.js'
 
 export default {
     name: 'settings',
@@ -230,6 +230,7 @@ export default {
                 this.dialog = false;
                 if (!err) {
                     this.$store.commit('SOCKET_USERGET', res);
+                    this.showToast('changes saved successfully');
                 }
             });
         },
@@ -241,6 +242,7 @@ export default {
                 value,
                 userName,
             }, (err, res) => {
+                this.showToast('changes saved successfully');
             });
         },
         switchClicked(item, val) {

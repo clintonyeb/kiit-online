@@ -51,9 +51,6 @@
                                 Upload Avatar
                                 <input type="file" name="file" id="file" @change="onChange">
                             </v-btn>
-                            <v-btn class="red" light>
-                                Remove Avatar
-                            </v-btn>
                         </div>
     
                     </v-card-row>
@@ -143,7 +140,7 @@ export default {
             }
         },
         uploadStart(event) {
-            console.log('start');
+            this.showProgress();
         },
         uploadProgress(event) {
             // this.files = this.files.fil
@@ -154,6 +151,7 @@ export default {
             }
         },
         uploadError(event) {
+            this.hideProgress();
             // return this.checkCompleted();
             console.log('error', event.error);
         },
@@ -163,10 +161,13 @@ export default {
                 avatar: this.file.name,
                 props: this.avatarProps,
             }
+            this.showProgress();
 
             this.$socket.emit('avatar', data, (err, res) => {
                 this.profile.avatar = this.file.name;
                 this.$store.commit('CHANGE_AVATAR', this.file.name);
+                this.hideProgress();
+                this.showToast('changes saved successfully');
             });
         },
         showEditor() {

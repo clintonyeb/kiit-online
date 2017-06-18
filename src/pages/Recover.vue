@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Validator from '../directives/validator.js'
+import Validator from '../mixins/validator.js'
 import { recoverPass } from '../store/api.js';
 
 export default {

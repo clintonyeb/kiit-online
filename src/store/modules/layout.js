@@ -3,12 +3,12 @@ const state = {
   sidebar: {
     drawer: true,
     items: [
-      { title: 'Home', icon: 'dashboard', path: '/index', name: 'index' },
+      { title: 'Home', icon: 'home', path: '/index', name: 'index' },
       { title: 'Chat', icon: 'chat', path: '/chat', name: 'chat' },
-      // { title: 'Profile', icon: 'account_circle', path: '/profile', name: 'profile' },
-      { title: 'Settings', icon: 'settings', path: '/settings', name: 'settings' },
+      { title: 'New Post', icon: 'add_circle', path: '/create', name: 'create' },
+      { title: 'Profile', icon: 'account_circle', path: '/settings', name: 'settings' },
       { title: 'Help', icon: 'help', path: '/help', name: 'help' },
-      { title: 'Logout', icon: 'settings_power', path: '/login', name: 'logout' },
+      { title: 'Logout', icon: 'lock', path: '/login', name: 'logout' },
     ],
     mini: false,
     resizeWatcher: true,
@@ -52,6 +52,7 @@ const state = {
   },
   progress: {
     shown: false,
+    message: '',
   },
   comment: {
     dialog: false,
@@ -92,14 +93,6 @@ const mutations = {
   FILE_HOVERED(state, b) {
     state.chatInput.fileHover = b;
   },
-  SOCKET_USERSTATUS(state, data) {
-    state.snackbar.text = data;
-    state.snackbar.shown = true;
-  },
-  SOCKET_SLIDEADD(state, payload) {
-    state.snackbar.text = 'Slide added';
-    state.snackbar.shown = true;
-  },
   CLEAR_CHAT_INPUT(state) {
     state.chatInput.content = '';
   },
@@ -129,11 +122,21 @@ const mutations = {
         break;
     }
   },
-  PROGRESS_SHOW(state, type) {
-    state.progress.shown = type;
+  SHOW_PROGRESS(state, type) {
+    if (typeof type === 'string') {
+      state.progress.message = type;
+      state.progress.shown = true;
+    } else {
+      state.progress.message = '';
+      state.progress.shown = type;
+    }
   },
   SHOW_DIALOG(state, b = true) {
     state.comment.dialog = b;
+  },
+  SHOW_SNACK(state, text) {
+    state.snackbar.text = text;
+    state.snackbar.shown = true;
   },
 };
 

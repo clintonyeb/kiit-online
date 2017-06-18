@@ -8,6 +8,7 @@ import store from './store';
 import router from './routes';
 import VueSocketIO from './directives/socketio/';
 import SocketIOFileUpload from '../node_modules/socketio-file-upload/client';
+import globalMixins from './mixins/global';
 
 let token = getCookie('token');
 if (!token) {
@@ -43,6 +44,8 @@ Vue.directive('focus', {
     el.focus();
   },
 });
+
+Vue.mixin(globalMixins);
 
 const vm = new Vue({
   el: '#app',

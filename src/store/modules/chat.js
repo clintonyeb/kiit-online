@@ -43,6 +43,18 @@ const mutations = {
   START_LOADING(state, bool = true) {
     state.loading = bool;
   },
+  SET_TIME(state, id) {
+    const res = [];
+    for (let i = 0; i < state.messages.length; i++) {
+      const mess = state.messages[i];
+      if (mess.id && mess.id === id) {
+        mess.time = new Date().getTime();
+      }
+      res.push(mess);
+    }
+
+    state.messages = res;
+  },
 };
 
 

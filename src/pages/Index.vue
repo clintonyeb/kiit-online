@@ -6,6 +6,7 @@
         <v-flex xs12 md4 class="comment-box">
             <comment :shown="commentShown" @hidden="comment=false" class="comment" :postId="commentId"></comment>
         </v-flex>
+        <v-progress-circular v-if="loading" indeterminate class="primary--text prog"></v-progress-circular>
     </v-layout>
 </template>
 
@@ -20,6 +21,7 @@ export default {
         return {
             comment: false,
             commentItem: null,
+            loading: true,
         }
     },
     computed: {
@@ -46,15 +48,28 @@ export default {
                     }, 50);
                     return;
                 } else {
-                    this.$socket.emit('getPosts', { userName, offset: 0 }, (err, res) => { });
+                    this.$socket.emit('getPosts', { userName, offset: 0 }, (err, res) => {
+                        this.loading = false;
+                    });
                 }
-            }
+            } else this.loading = false;
         },
         postClicked(item) {
             this.commentItem = item;
             this.comment = !this.comment;
 
-        }
+        },
+        windowScrolled(event) {
+            if (this.loading) return false;
+            let scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+            let scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+            let scrolledToBottom = (scrollTop + window.innerHeight + 40) >= scrollHeight;
+            let offset = this.$store.state.post.items.length;
+            let userName = this.$store.state.user.userName;
+            this.$socket.emit('getPosts', { userName, offset }, (err, res) => {
+                this.loading = false;
+            });
+        },
     },
     components: {
         Post, Comment
@@ -65,7 +80,12 @@ export default {
             return next(false);
         }
         return next(true);
-    }
+    },
+    mounted() {
+        this.$nextTick(() => {
+            window.addEventListener('scroll', this.windowScrolled);
+        });
+    },
 }
 </script>
 
@@ -76,6 +96,12 @@ export default {
 
 .comment {
     position: absolute !important;
+}
+
+.prog {
+    position: absolute;
+    left: 50%;
+    bottom: 5;
 }
 </style>
 
