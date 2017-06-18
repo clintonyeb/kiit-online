@@ -2,27 +2,21 @@
     <v-navigation-drawer id="side-bar" persistent light :enable-resize-watcher="sidebar.resizeWatcher" :mini-variant.sync="sidebar.mini" v-model="sidebar.drawer">
         <v-list class="pa-0">
             <v-list-item>
-                <v-list-tile avatar tag="div">
-                    <v-list-tile-avatar>
-                        <img :src="avatar" />
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{fullName}}</v-list-tile-title>
-                        <v-list-tile-sub-title>{{userName}}</v-list-tile-sub-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                <router-link to="/settings">
+                    <v-list-tile avatar tag="div">
+                        <v-list-tile-avatar>
+                            <img :src="avatar" />
+                        </v-list-tile-avatar>
+                        <v-list-tile-content>
+                            <v-list-tile-title>{{fullName}}</v-list-tile-title>
+                            <v-list-tile-sub-title>{{userName}}</v-list-tile-sub-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </router-link>
             </v-list-item>
     
         </v-list>
         <v-list class="pt-0">
-    
-            <v-list-item>
-                <v-list-tile>
-                    <v-list-tile-content>
-                        <v-text-field single-line name="search" label="Search" id="search" append-icon="search"></v-text-field>
-                    </v-list-tile-content>
-                </v-list-tile>
-            </v-list-item>
     
             <v-divider></v-divider>
     

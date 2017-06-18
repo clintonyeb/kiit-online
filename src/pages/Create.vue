@@ -24,18 +24,18 @@
                             <p class="title">Lecture details:</p>
                         </v-card-row>
                         <v-card-row>
-                            <v-text-field label="Title for post" counter max="25" autofocus v-model="title"></v-text-field>
+                            <v-text-field label="Title for post" :errors="titleErrors" ref="title" counter max="25" autofocus v-model="title"></v-text-field>
                         </v-card-row>
                         <v-card-row>
                             <v-menu lazy :close-on-content-click="true" v-model="menu" transition="v-scale-transition" offset-y :nudge-left="40">
-                                <v-text-field slot="activator" label="Date of lecture" v-model="date" prepend-icon="event" readonly></v-text-field>
+                                <v-text-field slot="activator" label="Date of lecture" ref="date" :errors="dateErrors" v-model="date" prepend-icon="event" readonly></v-text-field>
                                 <v-date-picker v-model="date" no-title scrollable>
                                 </v-date-picker>
                             </v-menu>
-                            <v-select :items="classes" v-model="group" label="Class of lecture" dark single-line auto></v-select>
+                            <v-select :items="classes" v-model="group" ref="group" label="Class of lecture" :errors="classErrors" dark single-line auto></v-select>
                         </v-card-row>
                         <v-card-row>
-                            <v-text-field name="content" class="content" label="Additional message (not required)" id="content" counter multi-line max="120" v-model="content">
+                            <v-text-field name="content" ref="content" :errors="contentErrors" class="content" label="Additional message (not required)" id="content" counter multi-line max="120" v-model="content">
                             </v-text-field>
                         </v-card-row>
                         <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
@@ -45,7 +45,7 @@
             <v-stepper-content step="2">
                 <v-card flat>
                     <v-card-row ref="doc" class="document" @drop="drop" @dragover.prevent="dragOver" @dragleave.prevent="dragLeave">
-                        <input type="file" name="file" @change="onChange">
+                        <input type="file" name="file" @change="onChange" accept="application/*,text/*,image/*">
                         <h6 class="body-2">
                             Drop files here
                         </h6>
@@ -56,13 +56,16 @@
                         </h6>
                     </v-card-row>
     
-                    <v-card-row id="files" v-for="(file, index) in files" :key="file.name">
+                    <v-card-row id="files" v-for="item in files" :key="item.id">
                         <span>
-                            <v-chip close @input="removeFile(index)">
-                                <v-avatar class="teal">{{++index}}</v-avatar>
-                                {{file.name}}
+                            <v-chip close @input="removeFile(item.id)" :class="item.checked ? 'primary' : 'red'">
+                                <v-avatar class="teal">
+                                    <v-icon>{{item.checked ? 'done' : 'clear'}}</v-icon>
+                                </v-avatar>
+                                {{item.file.name}}
                             </v-chip>
-                            <span class="faded">{{formatBytes(file.size)}}</span>
+                            <span class="faded">{{formatBytes(item.file.size)}}</span>
+                            <span v-if="!item.checked"> &gt; 10MB</span>
                         </span>
                     </v-card-row>
     
@@ -76,6 +79,8 @@
 </template>
 
 <script>
+import Validator from '../directives/validator.js'
+
 
 export default {
     name: 'create',
@@ -119,7 +124,7 @@ export default {
             ],
             type: '',
             title: '',
-            date: '',
+            date: new Date().toISOString().substr(0, 10),
             menu: false,
             group: '',
             content: '',
@@ -127,56 +132,127 @@ export default {
             step: 0,
             sentFiles: [],
             errorFiles: [],
+            titleErrors: [],
+            dateErrors: [],
+            classErrors: [],
+            contentErrors: [],
+            fileId: 1,
         }
     },
     methods: {
         btnClicked() {
+            let res = false;
+
             switch (this.currStep) {
                 case 0:
                     let type = this.type;
-                    if (type === '' || type === null) {
-                        return;
+                    res = this.validate(type, {
+                        required: true,
+                    });
+
+                    if (res.valid) {
+                        this.step = 1;
                     }
-                    this.step = 1;
                     break;
                 case 1:
-                    if (this.validate(this.title, this.date, this.group)) {
-                        this.step = 2;
+
+                    // remove errors
+                    this.titleErrors = [];
+                    this.dateErrors = [];
+                    this.classErrors = [];
+                    this.contentErrors = [];
+
+                    let title = this.title;
+                    res = this.validate(title, {
+                        required: true,
+                        max: 25,
+                    });
+
+                    if (!res.valid) {
+                        this.titleErrors = [`Title ${res.message}`];
+                        this.$refs['title'].focus();
+                        return;
                     }
+
+                    let date = this.date;
+                    res = this.validate(date, {
+                        required: true,
+                        date: true,
+                        dateMax: new Date(),
+                    })
+
+                    if (!res.valid) {
+                        this.dateErrors = [`Date ${res.message}`];
+                        this.$refs['date'].focus();
+                        return;
+                    }
+
+                    let group = this.group;
+                    res = this.validate(group, {
+                        required: true,
+                    });
+                    if (!res.valid) {
+                        this.classErrors = [`Class ${res.message}`];
+                        this.$refs['group'].focus();
+                        return;
+                    }
+
+                    let content = this.content;
+                    res = this.validate(content, {
+                        max: 120,
+                    });
+
+                    if (!res.valid) {
+                        this.contentErrors = [`${res.message}`];
+                        this.$refs['content'].focus();
+                        return;
+                    }
+
+                    this.step = 2;
+
                     break;
                 case 2:
                     // send files here
-                    this.$uploader.submitFiles(this.files);
-
-                    // add file paths to data before sending
-                    // send data
-
+                    let files = this.files.map((f) => {
+                        return f.file;
+                    })
+                    console.log(files);
+                    this.$uploader.submitFiles(files);
                     break;
                 default:
                     break;
             }
-        },
-        validate(...params) {
-            let verified = true;
-            params.forEach((val) => {
-                verified = verified && val && val !== '' && val !== null && val !== undefined
-            });
-
-            return verified;
         },
         drop(event) {
             this.$refs.doc.classList.remove('drag-over');
             event.preventDefault();
             event.stopPropagation();
             let files = event.dataTransfer.files;
-            this.files.push(...files);
+            this.addFiles(files);
         },
-        removeFile(index) {
-            this.files.splice(index, 1);
+        removeFile(id) {
+            this.files = this.files.filter((file) => {
+                return file.id !== id;
+            })
+        },
+        addFiles(files) {
+            files = Array.from(files).map((file) => {
+                let ch = this.validate(file, {
+                    fileSize: true,
+                });
+                let res = {
+                    file: file,
+                    id: this.fileId++,
+                    checked: ch.valid,
+                }
+                return res;
+            })
+            console.log(files);
+            this.files.push(...files);
         },
         onChange(event) {
             let files = event.target.files;
-            this.files.push(...files);
+            this.addFiles(files);
         },
         dragOver(event) {
             this.$refs.doc.classList.add('drag-over');
@@ -191,10 +267,10 @@ export default {
             this.$uploader.addEventListener('error', this.uploadError);
         },
         uploadStart(event) {
-            // console.log('start');
+            console.log('start');
         },
         uploadProgress(event) {
-            // this.files = this.files.fil
+            console.log('progress');
         },
         uploadComplete(event) {
             if (event.success) {
@@ -203,6 +279,7 @@ export default {
             }
         },
         uploadError(event) {
+            console.log(event);
             this.errorFiles.push(event.file);
             return this.checkCompleted();
         },
@@ -217,8 +294,8 @@ export default {
             return;
         },
         sendPost() {
-            let files = this.files.map((file) => {
-                return file.name;
+            let files = this.files.map((f) => {
+                return f.file.name;
             })
             let data = {
                 title: this.title,
@@ -263,7 +340,8 @@ export default {
         this.$uploader.removeEventListener('progress', this.uploadProgress);
         this.$uploader.removeEventListener('complete', this.uploadComplete);
         this.$uploader.removeEventListener('error', this.uploadError);
-    }
+    },
+    mixins: [Validator],
 }
 </script>
 

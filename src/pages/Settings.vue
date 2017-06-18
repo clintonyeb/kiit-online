@@ -2,7 +2,7 @@
     <div id="settings">
         <v-list three-line subheader>
             <v-list-item>
-                <profile :display="display"></profile>
+                <profile :display="display" :perm="true"></profile>
             </v-list-item>
         </v-list>
     
@@ -88,10 +88,10 @@
                 <template v-if="type === 'email'">
                     <v-card class="pa-3">
                         <v-card-row>
-                            <v-text-field :value="user.email" label="Old email"></v-text-field>
+                            <v-text-field :value="user.email" :disabled="true" label="Current email"></v-text-field>
                         </v-card-row>
                         <v-card-row>
-                            <v-text-field label="New email" v-model="email"></v-text-field>
+                            <v-text-field label="New email" :errors="emailErrors" ref="email" v-model="newEmail"></v-text-field>
                         </v-card-row>
                         <v-card-row actions>
                             <v-btn class="red" light @click.native="dialog = false" style="margin: 0 10px 0 0">Cancel</v-btn>
@@ -102,13 +102,13 @@
                 <template v-if="type === 'password'">
                     <v-card class="pa-3">
                         <v-card-row>
-                            <v-text-field label="Current password" v-model="oldPassword"></v-text-field>
+                            <v-text-field label="Current password" type="password" :errors="oldPassErrors" ref="oldPass" v-model="oldPass"></v-text-field>
                         </v-card-row>
                         <v-card-row>
-                            <v-text-field v-model="password" label="New password"></v-text-field>
+                            <v-text-field v-model="password" label="New password" type="password" :errors="newPassErrors" ref="newPass"></v-text-field>
                         </v-card-row>
                         <v-card-row>
-                            <v-text-field label="Confirm new password"></v-text-field>
+                            <v-text-field label="Confirm new password" type="password" :errors="conPassErrors" ref="conPass" v-model="conPass"></v-text-field>
                         </v-card-row>
                         <v-card-row actions>
                             <v-btn class="red" light @click.native="dialog = false" style="margin: 0 10px 0 0">Cancel</v-btn>
@@ -124,6 +124,7 @@
 <script>
 
 import Profile from './Profile.vue';
+import Validator from '../directives/validator.js'
 
 export default {
     name: 'settings',
@@ -131,15 +132,21 @@ export default {
         return {
             notifications: false,
             sound: false,
-            oldEmail: '',
+            newEmail: '',
             email: '',
             dialog: false,
             type: '',
             password: '',
-            oldPassword: '',
+            oldPass: '',
+            conPass: '',
             loggedIn: false,
             emailNoti: false,
             display: '',
+            emailErrors: [],
+            oldPassErrors: [],
+            newPassErrors: [],
+            conPassErrors: [],
+
         }
     },
     components: {
@@ -151,8 +158,67 @@ export default {
             this.dialog = true;
         },
         hideEditor(type) {
-            let data = type === 'email' ? this.email : this.password;
-            let old = type === 'email' ? this.oldEmail : this.oldPassword;
+            if (type === 'email') {
+                this.changeEmail(type);
+            } else if (type === 'password') {
+                this.changePass(type);
+            }
+
+
+        },
+        changeEmail(type) {
+            this.emailErrors = [];
+
+            let oldEmail = this.email;
+            let newEmail = this.newEmail;
+
+            let res = this.validate(newEmail, {
+                required: true,
+                email: true,
+                notSame: oldEmail,
+            })
+            if (!res.valid) {
+                this.emailErrors = [`New email ${res.message}`];
+                this.$refs['email'].focus();
+                return;
+            }
+
+            this.submitChange(type, oldEmail, newEmail);
+        },
+        changePass(type) {
+            this.conPassErrors = [];
+            this.oldPassErrors = [];
+            this.newPassErrors = [];
+
+            let oldPass = this.oldPass;
+
+            let res = this.validate(oldPass, {
+                required: true,
+            })
+            if (!res.valid) {
+                this.oldPassErrors = [`Password ${res.message}`];
+                this.$refs['oldPass'].focus();
+                return;
+            }
+
+            let newPass = this.password;
+            let conPass = this.conPass;
+
+            res = this.validate(newPass, {
+                required: true,
+                match: conPass,
+                min: 6,
+
+            })
+            if (!res.valid) {
+                this.newPassErrors = [`Password ${res.message}`];
+                this.$refs['newPass'].focus();
+                return;
+            }
+
+            this.submitChange(type, oldPass, newPass);
+        },
+        submitChange(type, old, data) {
             let userName = this.user.userName;
 
             this.$socket.emit('settings', {
@@ -207,7 +273,8 @@ export default {
     },
     mounted() {
         this.waitForUserName();
-    }
+    },
+    mixins: [Validator],
 }
 </script>
 

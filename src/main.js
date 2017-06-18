@@ -19,7 +19,10 @@ const origin = window.location.origin;
 const socket = socketio(`${origin}?token=${token}`);
 
 const uploader = new SocketIOFileUpload(socket);
+uploader.resetFileInputs = true;
+uploader.maxFileSize = 1e+7;
 Vue.prototype.$uploader = uploader;
+
 Vue.use(VueSocketIO, socket, store);
 Vue.use(Vuetify);
 
@@ -40,7 +43,6 @@ Vue.directive('focus', {
     el.focus();
   },
 });
-
 
 const vm = new Vue({
   el: '#app',

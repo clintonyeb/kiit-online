@@ -69,9 +69,10 @@ const mutations = {
   },
   SOCKET_AUTH(state, payload) {
     if (payload == '401') {
-      if (location.pathname != '/login') {
-        location.replace('/login');
-      }
+      let path = location.pathname;
+      if (path == '/login' || path == '/register') return;
+      location.replace('/login');
+
     } else {
       console.log('authentication success', payload);
     }

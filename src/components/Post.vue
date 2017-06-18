@@ -43,7 +43,7 @@ export default {
         comments: function () {
             let count = Number(this.post.commentsCount);
 
-            if (count === 0) {
+            if (!count || count === 0) {
                 return 'No comments';
             }
             else if (count === 1) {

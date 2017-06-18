@@ -3,6 +3,7 @@
         <v-card hover raised>
             <v-card-row height="200px" class="pa-5 grey lighten-1 cover">
                 <div class="display-1 white--text text-xs-center">ACCOUNT REGISTRATION</div>
+                <v-btn primary light class="reg-btn" to="/login" :router="true">Login</v-btn>
             </v-card-row>
         </v-card>
     
@@ -17,7 +18,7 @@
             <v-stepper-content step="0">
                 <v-card flat>
                     <v-card-text>
-                        <v-text-field name="userName" label="University roll number" type="number" required v-model="userName" hint="Please provide your university roll number for verification"></v-text-field>
+                        <v-text-field name="userName" ref="userName" :errors="userErrors" label="University roll number" required v-model.trim="userName" hint="Please provide your university roll number for verification"></v-text-field>
                     </v-card-text>
                     <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
@@ -25,23 +26,21 @@
             <v-stepper-content step="1">
                 <v-card flat>
                     <v-card-text>
-                        <v-text-field name="name" label="Display name" ref="name" type="text" v-model="name" hint="This is the name you will be referred to, this is not your username" required></v-text-field>
+                        <v-text-field name="name" label="Display name" :errors="nameErrors" ref="name" type="text" v-model.trim="name" hint="This is the name you will be referred to, this is not your username" required></v-text-field>
     
-                        <v-text-field name="password" label="Choose a password" ref="password" type="password" required v-model="password" hint="Password should be at least 6 characters"></v-text-field>
+                        <v-text-field name="password" label="Choose a password" :errors="passErrors" ref="password" type="password" required v-model.trim="password" hint="Should be at least 6 characters"></v-text-field>
     
-                        <v-text-field name="email" label="Recovery email" ref="email" type="email" required v-model="email" hint="This email will be used in case you forget your password"></v-text-field>
+                        <v-text-field name="email" label="Recovery email" :errors="emailErrors" ref="email" required v-model.trim="email" hint="Your recovery email address"></v-text-field>
                     </v-card-text>
                     <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
             </v-stepper-content>
             <v-stepper-content step="2">
-                <v-card flat>
-                    <v-card-text>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum quam, ut error laborum in debitis omnis nobis, dolorem qui rem veniam ullam odit, dolore, doloremque! Recusandae harum alias impedit atque! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit cum suscipit consequatur nam vitae aliquid, aliquam, esse debitis pariatur, itaque explicabo omnis. Veniam maxime quis rem totam aperiam, ex doloribus!
-                        </p>
-                    </v-card-text>
-                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
-                </v-card>
+                <p>
+                    <ul>
+                        <li v-for="item in agrees">{{item}}</li>
+                    </ul>
+                </p>
             </v-stepper-content>
         </v-stepper>
         <div class="page-content">
@@ -54,6 +53,7 @@
 
 <script>
 
+import Validator from '../directives/validator.js'
 import { validateRollNumber, postAccountDetails } from '../store/api.js';
 
 export default {
@@ -61,23 +61,39 @@ export default {
     data() {
         return {
             userName: '',
+            name: '',
             alert: {
                 shown: false,
                 message: ''
             },
             password: '',
-            email: ''
+            email: '',
+            userErrors: [],
+            nameErrors: [],
+            passErrors: [],
+            emailErrors: [],
+            agrees: [
+                'Agree that your account may be deleted should you go against any of these rules',
+                'Agree to discuss only matters related to school and studies',
+                'To resist from any form insults to staff and students',
+                'To show respect to staff who come around to help, keeping in mind that they are not obligated in any way.',
+                'To obey common sense',
+            ]
         }
     },
     computed: {
         currStep() {
-            return this.user.step;
+            let step = this.user.step;
+            if (step === 1) {
+                this.name = this.user.fullName;
+            }
+            return step;
         },
         user() {
             return this.$store.state.user;
         },
-        name() {
-            let name = this.user.fullName;
+        fullName() {
+            let name = this.name;
             return name || '';
         },
         btnText() {
@@ -98,10 +114,27 @@ export default {
         btnClicked() {
             this.alert.shown = false;
             let step = this.currStep;
+            let data = {};
+            let res = false;
+
             switch (step) {
                 case 0:
+                    // clear previous errors
+                    this.userErrors = [];
+
+                    // validate roll number from server
                     let userName = this.userName;
-                    if (userName == "" || userName === null) return;
+                    res = this.validate(userName,
+                        {
+                            required: true
+                        }
+                    );
+                    if (!res.valid) {
+                        this.userErrors = [`Rollnumber ${res.message}`];
+                        this.$refs['userName'].focus();
+                        return;
+                    }
+
                     validateRollNumber(userName, (err, res) => {
                         if (err) {
                             if (err.response.status === 409) {
@@ -121,26 +154,65 @@ export default {
                     break;
 
                 case 1:
-                    let name = this.name ? this.name.trim() : null;
-                    let password = this.password ? this.password.trim() : null;
-                    let email = this.email ? this.email.trim() : null;
+                    this.userErrors = [];
+                    this.passErrors = [];
+                    this.emailErrors = [];
 
-                    if (name && password && email) {
-                        let data = {
-                            fullName: name,
-                            password: password,
-                            email: email
+                    let name = this.name;
+
+                    res = this.validate(name,
+                        {
+                            required: true
                         }
-                        this.$store.commit('SET_PAYLOAD', data);
-
-                    } else {
+                    );
+                    if (!res.valid) {
+                        this.nameErrors = [`Display name ${res.message}`];
+                        this.$refs['name'].focus();
                         return;
                     }
+
+                    let password = this.password;
+
+                    res = this.validate(password,
+                        {
+                            required: true,
+                            min: 6,
+                        }
+                    );
+
+                    if (!res.valid) {
+                        this.passErrors = [`Password ${res.message}`];
+                        this.$refs['password'].focus();
+                        return;
+                    }
+
+                    let email = this.email;
+
+                    res = this.validate(email,
+                        {
+                            required: true,
+                            email: true,
+                        }
+                    );
+
+                    if (!res.valid) {
+                        this.emailErrors = [`Email ${res.message}`];
+                        this.$refs['email'].focus();
+                        return;
+                    }
+
+                    data = {
+                        fullName: name,
+                        password: password,
+                        email: email
+                    }
+                    this.$store.commit('SET_PAYLOAD', data);
+
                     break;
                 case 2:
                     let reg = this.$store.getters['GET_PAYLOAD'];
 
-                    let data = {
+                    data = {
                         userName: reg.userName,
                         fullName: reg.fullName,
                         password: reg.password,
@@ -165,7 +237,8 @@ export default {
             let step = this.user.step;
             return step !== index;
         }
-    }
+    },
+    mixins: [Validator],
 }
 </script>
 
@@ -185,6 +258,12 @@ export default {
     background-image: url('/assets/images/mypic.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.reg-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
 </style>
 

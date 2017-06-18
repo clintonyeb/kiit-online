@@ -29,3 +29,6 @@ export function loginUser(payload, cb) {
   return post('/login', payload, cb);
 }
 
+export function recoverPass(payload, cb) {
+  return post('/recover', payload, cb);
+}

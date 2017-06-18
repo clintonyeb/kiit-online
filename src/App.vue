@@ -28,6 +28,8 @@ export default {
     }
   },
   beforeCreate: function () {
+    let path = location.pathname;
+    if (path == '/login' || path == '/register') return;
     let token = localStorage.getItem('token');
     if (!token) {
       return this.$router.replace('/login');
@@ -56,13 +58,6 @@ export default {
       return this.$route.name === 'chat';
     }
   },
-  sockets: {
-    auth(payload) {
-      if (payload == 401) {
-        return this.$router.replace('/login');
-      }
-    }
-  }
 }
 
 </script>

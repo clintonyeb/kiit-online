@@ -3,7 +3,7 @@
         <v-card-text class="pa-5 grey lighten-4 text--darken-4">
             <v-layout row wrap>
                 <v-flex md4 xs12>
-                    <div class="imageCont">
+                    <div class="imageCont" v-if="profile">
                         <div style="width:180px; margin: 0 auto;">
                             <img :src="avatar" width="180px">
                         </div>
@@ -16,7 +16,7 @@
                 </v-flex>
     
                 <v-flex md7 xs12>
-                    <div class="textCont text-xs-center">
+                    <div class="textCont text-xs-center" v-if="profile">
                         <p class="item">
                             <span class="display-1">
                                 {{profile.fullName}}
@@ -75,7 +75,21 @@ import Cropper from 'cropperjs';
 
 export default {
     name: 'profile',
-    props: ['userName', 'display'],
+    props: {
+        userName: {
+            type: String,
+            required: false,
+        },
+        display: {
+            type: String,
+            required: false,
+        },
+        perm: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+    },
     data() {
         return {
             dialog: false,
@@ -86,7 +100,6 @@ export default {
             cropper: null,
             zoom: 5,
             avatarProps: null,
-            perm: false,
             profile: null,
         }
     },
@@ -188,18 +201,16 @@ export default {
         }
     },
     created() {
-        let selfUserName = this.$store.state.user.userName;
-        let userName = this.userName || selfUserName;
 
-        if (userName === selfUserName) {
-            this.perm = true;
+        if (this.perm) {
             this.profile = this.$store.state.user;
         } else {
-            this.perm = false;
+            let userName = this.userName;
             this.$socket.emit('getProfile', { userName }, (err, res) => {
                 this.profile = res;
             });
         }
+
         this.registerUploadEvents();
     },
     beforeDestroy() {
