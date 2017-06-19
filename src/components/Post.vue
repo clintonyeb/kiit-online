@@ -8,13 +8,14 @@
         <div class="content">
             <div class="summary">
                 <router-link class="user" :to="`/profile/${user.userName}`">
-                    {{user.fullName}}
+                    {{user.fullName | capitalize}}
                 </router-link> added a new lecture slide
-                <timeago :since="date" class="date" :auto-update="60"></timeago>
+                <timeago :since="date" class="date" :auto-update="60" v-if="date"></timeago>
+                <v-progress-circular v-bind:size="15" :width="4" class="primary--text wait" indeterminate v-else></v-progress-circular>
             </div>
             <div class="extra text">
-                <span class="title">{{post.title}}</span>
-                <span v-if="post.content">{{content}}</span>
+                <span class="title">{{post.title | capitalize}}</span>
+                <span v-if="post.content">{{content | upperFirst}}</span>
             </div>
             <div class="extra images" v-for="file in post.files.slice(0, 6)" :key="file">
                 <img :src="preview(file)">
@@ -61,14 +62,9 @@ export default {
         },
         date() {
             let time = this.post.time;
-            return new Date(Number(time));
+            return time ? new Date(Number(time)) : null;
         },
         content() {
-            /*let parts = this.post.content.split('.');
-            let text = parts.slice(0, 2).join('. ').trim() + '.';
-            if (parts.length > 2) {
-                text = `${text}..`;
-            }*/
             return this.post.content;
         },
     },
@@ -131,6 +127,15 @@ export default {
     width: 100%;
     padding: 5px;
     height: auto;
+}
+
+.meta {
+    display: inline-block;
+}
+
+.wait {
+    line-height: 15px;
+    text-align: center;
 }
 </style>
 

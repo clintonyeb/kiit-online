@@ -1,7 +1,6 @@
 const state = {
   items: [],
   done: false,
-  comment: {},
 };
 
 const getters = {
@@ -25,14 +24,8 @@ const getters = {
   },
   getCommentsById: state => (postId) => {
     if (!postId) return [];
-    const comment = state.comment;
-
-    if (typeof (comment[postId]) === 'undefined') {
-      comment[postId] = {};
-      comment[postId].items = [];
-    }
-
-    return comment[postId].items;
+    let post = state.items.find(post => post.id === postId);
+    return post.comments;
   },
 };
 
@@ -40,10 +33,15 @@ const actions = {
   addComment(context, message) {
     const user = context.rootState.user;
     message.user = user;
+    message.local = true;
     context.commit('ADD_COMMENT', message);
   },
   socket_post(context, payload) {
     context.commit('SOCKET_POSTMORE', payload);
+  },
+  socket_commentGet(context, payload) {
+    payload.local = false;
+    context.commit('ADD_COMMENT', payload);
   },
 };
 
@@ -53,8 +51,10 @@ const mutations = {
       return;
     }
     if (payload === 'done') {
-      return state.done = true;
+      state.done = true;
+      return;
     }
+    payload.comments = [];
     state.items.push(payload);
   },
   SOCKET_POSTMORE(state, payload) {
@@ -64,44 +64,39 @@ const mutations = {
     if (payload === 'done') {
       return state.done = true;
     }
+    payload.comments = [];
     state.items.unshift(payload);
   },
   POST_FINISHED(state) {
     state.done = true;
   },
   ADD_COMMENT(state, payload) {
-    const comment = state.comment;
     const postId = payload.postId;
-
-    if (typeof comment[postId] === 'undefined') {
-      comment[postId] = {};
-      comment[postId].items = [];
-    }
-    comment[postId].items.push(payload);
-  },
-  SOCKET_COMMENTGET(state, payload) {
-    const comment = state.comment;
-    const postId = payload.postId;
-
-    if (typeof (comment[postId]) === 'undefined') {
-      comment[postId] = {};
-      comment[postId].items = [];
-    }
-    comment[postId].items.unshift(payload);
+    let post = state.items.find(post => post.id === postId);
+    let comments = post.comments;
+    comments = payload.local ? comments.push(payload) : comments.unshift(payload);
   },
   SOCKET_COMMENT(state, payload) {
-    const post = state.items.filter(item => item.id === payload.postId);
-    if (post.length < 1) {
-      return;
-    }
-
-    const p = post[0];
-    p.commentsCount += 1;
-
     const postId = payload.postId;
-    const comment = state.comment;
-    if (typeof (comment[postId]) !== 'undefined') {
-      comment[postId].items.push(payload);
+    let post = state.items.find(post => post.id === postId);
+    post.commentsCount += 1;
+
+    const comments = post.comments;
+    comments.push(payload);
+  },
+  SET_POST_TIME(state, payload) {
+    const postId = payload.postId;    
+    let post = state.items.find(post => post.id === postId);
+    post.commentsCount += 1;
+
+    let comments = post.comments;
+
+    for (let i = comments.length - 1; i >= 0; i -= 1) {
+      const comm = comments[i];
+      if (comm.id && comm.id === payload.id) {
+        comm.time = new Date().getTime();
+        break;
+      }
     }
   },
 };

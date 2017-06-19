@@ -1,5 +1,26 @@
 <template>
-  <div>
+  <v-container fluid>
+  
+    <v-layout row wrap>
+      <v-flex xs12>
+        <h5 class="medium">Contributors</h5>
+      </v-flex>
+  
+      <v-flex xs12>
+        <h5 class="medium">Sponsors</h5>
+      </v-flex>
+  
+      <v-flex xs12>
+        <h5 class="medium">Motivation</h5>
+      </v-flex>
+  
+      <v-flex xs12>
+        <h5 class="medium">Other information</h5>
+      </v-flex>
+    </v-layout>
+  
+    <v-divider></v-divider>
+  
     <v-layout row wrap>
       <v-flex xs12 class="section">
         <h5 class="medium">Users and Accounts</h5>
@@ -178,25 +199,7 @@
         </v-expansion-panel>
       </v-flex>
     </v-layout>
-    <v-divider></v-divider>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <h5 class="medium">Contributors</h5>
-      </v-flex>
-  
-      <v-flex xs12>
-        <h5 class="medium">Sponsors</h5>
-      </v-flex>
-  
-      <v-flex xs12>
-        <h5 class="medium">Motivation</h5>
-      </v-flex>
-  
-      <v-flex xs12>
-        <h5 class="medium">Other information</h5>
-      </v-flex>
-    </v-layout>
-  </div>
+  </v-container>
 </template>
 
 <script>

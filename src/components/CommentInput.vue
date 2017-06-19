@@ -24,6 +24,7 @@ export default {
     return {
       isMobile: true,
       content: '',
+      commentId: 1,
     }
   },
   created() {
@@ -53,11 +54,13 @@ export default {
         postId: this.postId,
         content: text,
         userName: userName,
-        time: new Date().getTime(),
         class: _class,
+        id: this.commentId++,
+        time: null,
       };
 
       this.$socket.emit('comment', data, (err, res) => {
+        this.$store.commit('SET_POST_TIME', res);
       });
       this.$store.dispatch('addComment', data);
       this.content = '';

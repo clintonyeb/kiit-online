@@ -27,4 +27,16 @@ export default {
       this.$store.commit('SHOW_SNACK', mess);
     },
   },
+  filters: {
+    capitalize(value) {
+      let words = value.split(' ');
+      let res = words.map( word => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+      return res;
+    },
+    upperFirst(value) {
+       return value.charAt(0).toUpperCase() + value.slice(1);
+    },
+  },
 };

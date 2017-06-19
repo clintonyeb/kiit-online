@@ -45,11 +45,7 @@ export default {
             return this.$store.state.layout.chatInput;
         },
         textAreaMess() {
-            if (this.isMobile) {
-                return 'Type your message here'
-            } else {
-                return this.chatInput.placeholder;
-            }
+            return 'Type your message here';
         },
         rows() {
             if (this.isMobile) {
@@ -87,10 +83,10 @@ export default {
                 content: text,
                 userName: userName,
                 id: this.messId++,
+                time:null,
             };
 
             this.$socket.emit('chat', data, (err, resId) => {
-                console.log(err, resId);
                 if (!err && resId) {
                     this.$store.commit('SET_TIME', resId);
                 }

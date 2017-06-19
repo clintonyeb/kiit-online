@@ -84,7 +84,7 @@
             </v-list-item>
         </v-list>
         <v-layout row justify-centers>
-            <v-dialog v-model="dialog" persistent>
+            <v-dialog v-model="dialog" persistent :width="500">
                 <template v-if="type === 'email'">
                     <v-card class="pa-3">
                         <v-card-row>

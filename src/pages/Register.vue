@@ -18,21 +18,39 @@
             <v-stepper-content step="0">
                 <v-card flat>
                     <v-card-text>
-                        <v-text-field name="userName" ref="userName" :errors="userErrors" label="University roll number" required v-model.trim="userName" hint="Please provide your university roll number for verification"></v-text-field>
+                        <v-container fluid>
+                            <v-layout row wrap>
+                                <v-flex xs12>
+                                    <v-text-field name="userName" :tabindex="1" ref="userName" @keyup.native.enter="btnClicked" :errors="userErrors" label="University roll number" required v-model.trim="userName" hint="Please provide your university roll number for verification"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-btn primary @click.native="btnClicked" :tabindex="2" light>{{btnText}}</v-btn>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
                     </v-card-text>
-                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
             </v-stepper-content>
             <v-stepper-content step="1">
                 <v-card flat>
                     <v-card-text>
-                        <v-text-field name="name" label="Display name" :errors="nameErrors" ref="name" type="text" v-model.trim="name" hint="This is the name you will be referred to, this is not your username" required></v-text-field>
-    
-                        <v-text-field name="password" label="Choose a password" :errors="passErrors" ref="password" type="password" required v-model.trim="password" hint="Should be at least 6 characters"></v-text-field>
-    
-                        <v-text-field name="email" label="Recovery email" :errors="emailErrors" ref="email" required v-model.trim="email" hint="Your recovery email address"></v-text-field>
+                        <v-container fluid>
+                            <v-layout row wrap>
+                                <v-flex xs12>
+                                    <v-text-field name="name" label="Display name" :tabindex="3" @keyup.native.enter="btnClicked" :errors="nameErrors" ref="name" type="text" v-model.trim="name" hint="This is the name you will be referred to, this is not your username" required></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-text-field name="password" label="Choose a password" :tabindex="4" @keyup.native.enter="btnClicked" :errors="passErrors" ref="password" type="password" required v-model.trim="password" hint="Should be at least 6 characters"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-text-field name="email" label="Recovery email" :tabindex="5" @keyup.native.enter="btnClicked" :errors="emailErrors" ref="email" required v-model.trim="email" hint="Your recovery email address"></v-text-field>
+                                </v-flex>
+                                <v-flex xs12>
+                                    <v-btn primary @click.native="btnClicked" :tabindex="6" @keyup.native.enter="btnClicked" light>{{btnText}}</v-btn>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
                     </v-card-text>
-                    <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
             </v-stepper-content>
             <v-stepper-content step="2">
@@ -270,6 +288,13 @@ export default {
     position: absolute;
     right: 10px;
     top: 10px;
+}
+
+@media screen and (max-device-width: 768px) {
+    .page-content {
+        width: 100%;
+        min-width: 100% !important;
+    }
 }
 </style>
 

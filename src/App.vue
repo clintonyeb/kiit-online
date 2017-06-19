@@ -19,7 +19,7 @@
         <p v-if="progress.message">{{}progress.message}</p>
       </div>
     </div>
-    <!--<router-view name="footer"></router-view>-->
+    <router-view name="footer"></router-view>
   </v-app>
 </template>
 
@@ -59,17 +59,19 @@ export default {
 // Theme
 
 $theme := {
-  primary: #00BCD4
-  accent: #03A9F4
+  primary: #4CAF50
+  accent: #8BC34A
   secondary: #757575
-  info: #B2EBF2
-  warning: #ff0000
-  error: #990000
-  success: #0097A7
-  dark-primary: #0097A7
-  light-primary: #B2EBF2
+  info: #0d47a1
+  warning: #f57f17
+  error: #b71c1c
+  success: #1b5e20
+  dark-primary: #388E3C
+  light-primary: #C8E6C9
   text-primary: #FFFFFF
 }
+
+
 
 @import '../node_modules/vuetify/src/stylus/main';
 @import './assets/feed.css';
@@ -91,6 +93,10 @@ a {
     margin: 0;
     padding: 0;
    
+}
+
+.divider {
+  color: #BDBDBD;
 }
 
 .prog {

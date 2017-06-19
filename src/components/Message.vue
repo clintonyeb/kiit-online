@@ -42,7 +42,7 @@ export default {
         messageClicked: function () {
             this.$store.commit('REPLY_USER', this.mess.user.userName);
         },
-    }
+    },
 }
 </script>
 

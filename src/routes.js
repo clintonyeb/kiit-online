@@ -28,7 +28,7 @@ export default new VueRouter({
         default: loadPage('Index'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -43,7 +43,7 @@ export default new VueRouter({
         default: loadPage('Profile'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
       props: {
         default: true,
@@ -58,7 +58,7 @@ export default new VueRouter({
         default: loadPage('Profile'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -77,7 +77,7 @@ export default new VueRouter({
         default: loadPage('Help'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -87,7 +87,7 @@ export default new VueRouter({
         default: loadPage('Create'),
         sideBar: loadComponent('Sidebar'),
         toolBar: loadComponent('Toolbar'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -105,7 +105,7 @@ export default new VueRouter({
       name: 'login',
       components: {
         default: loadPage('Login'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -113,7 +113,7 @@ export default new VueRouter({
       name: 'register',
       components: {
         default: loadPage('Register'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -121,7 +121,7 @@ export default new VueRouter({
       name: 'recover',
       components: {
         default: loadPage('Recover'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
     {
@@ -129,7 +129,7 @@ export default new VueRouter({
       name: 'error',
       components: {
         default: loadPage('Error'),
-        // footer: loadComponent('Footer'),
+        footer: loadComponent('Footer'),
       },
     },
   ],

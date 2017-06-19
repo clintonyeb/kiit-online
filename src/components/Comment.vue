@@ -6,7 +6,7 @@
           <v-btn icon="icon" @click.native="hide" light>
             <v-icon>close</v-icon>
           </v-btn>
-          <v-toolbar-title>{{post.title}}</v-toolbar-title>
+          <v-toolbar-title>{{post.title | capitalize}}</v-toolbar-title>
         </v-toolbar>
   
         <v-card-text id="comment-container" ref="comment-container">
@@ -15,7 +15,7 @@
               <div class="event">
                 <div class="content">
                   <div class="extra text">
-                    <span v-if="post.content">{{post.content}}</span>
+                    <span v-if="post.content">{{post.content | upperFirst}}</span>
                   </div>
                   <div class="extra images" v-for="file in post.files" :key="file">
                     <img :src="preview(file)">
@@ -85,7 +85,7 @@ export default {
     },
     postId() {
       let comms = this.$store.getters.getCommentsById(this.postId);
-      if (!comms.items) {
+      if (comms.length < 1) {
         this.$socket.emit('getComments', {
           postId: this.postId,
           userName: this.$store.state.user.userName

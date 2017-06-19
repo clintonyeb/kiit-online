@@ -5,5 +5,10 @@
     ],
     "env": {
         "jest": true
+    },
+    "rules": {
+        "no-shadow": "off",
+        "no-param-reassign": "off",
+        "global-require": "off"
     }
 }

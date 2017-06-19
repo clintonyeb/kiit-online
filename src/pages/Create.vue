@@ -12,7 +12,11 @@
             <v-stepper-content step="0">
                 <v-card flat>
                     <v-card-text>
-                        <v-select :items="postTypes" v-model="type" label="Please select one" dark single-line auto required></v-select>
+                        <v-container>
+                            <v-flex xs12>
+                                <v-select :items="postTypes" v-model="type" label="Please select one" :tabindex="1" dark single-line auto required></v-select>
+                            </v-flex>
+                        </v-container>
                     </v-card-text>
                     <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
                 </v-card>
@@ -20,25 +24,35 @@
             <v-stepper-content step="1">
                 <template v-if="type === 'lecture'">
                     <v-card flat>
-                        <v-card-row>
-                            <p class="title">Lecture details:</p>
-                        </v-card-row>
-                        <v-card-row>
-                            <v-text-field label="Title for post" :errors="titleErrors" ref="title" counter max="25" autofocus v-model="title"></v-text-field>
-                        </v-card-row>
-                        <v-card-row>
-                            <v-menu lazy :close-on-content-click="true" v-model="menu" transition="v-scale-transition" offset-y :nudge-left="40">
-                                <v-text-field slot="activator" label="Date of lecture" ref="date" :errors="dateErrors" v-model="date" prepend-icon="event" readonly></v-text-field>
-                                <v-date-picker v-model="date" no-title scrollable>
-                                </v-date-picker>
-                            </v-menu>
-                            <v-select :items="classes" v-model="group" ref="group" label="Class of lecture" :errors="classErrors" dark single-line auto></v-select>
-                        </v-card-row>
-                        <v-card-row>
-                            <v-text-field name="content" ref="content" :errors="contentErrors" class="content" label="Additional message (not required)" id="content" counter multi-line max="120" v-model="content">
-                            </v-text-field>
-                        </v-card-row>
-                        <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
+                        <v-card-text>
+                            <v-container fluid>
+                                <v-layout row wrap>
+                                    <v-flex xs12>
+                                        <p class="title">Lecture details:</p>
+                                    </v-flex>
+                                    <v-flex xs12>
+                                        <v-text-field label="Title for post" :tabindex="2" :errors="titleErrors" ref="title" counter max="25" autofocus v-model="title"></v-text-field>
+                                    </v-flex>
+                                    <v-flex xs12 md6>
+                                        <v-menu lazy :close-on-content-click="true" v-model="menu" transition="v-scale-transition" offset-y :nudge-left="40">
+                                            <v-text-field slot="activator" label="Date of lecture" ref="date" :errors="dateErrors" v-model="date" prepend-icon="event" readonly></v-text-field>
+                                            <v-date-picker v-model="date" no-title scrollable>
+                                            </v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+                                    <v-flex xs12 md6>
+                                        <v-select :items="classes" v-model="group" ref="group" label="Class of lecture" :errors="classErrors" dark single-line auto></v-select>
+                                    </v-flex>
+                                    <v-flex xs12>
+                                        <v-text-field name="content" ref="content" :errors="contentErrors" class="content" label="Additional message (not required)" id="content" counter multi-line max="120" v-model="content">
+                                        </v-text-field>
+                                    </v-flex>
+                                    <v-flex xs12>
+                                        <v-btn primary @click.native="btnClicked" light>{{btnText}}</v-btn>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </v-card-text>
                     </v-card>
                 </template>
             </v-stepper-content>

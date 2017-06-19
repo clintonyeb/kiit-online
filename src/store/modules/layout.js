@@ -31,13 +31,12 @@ const state = {
     right: true,
     left: false,
     bottom: true,
-    multiline: true,
+    multiline: false,
     vertical: false,
     shown: false,
   },
   chatInput: {
     content: '',
-    placeholder: 'Type your message here, you can also select an emoticon with the left icon, or add a file with the right icon',
     files: [],
     fileHover: false,
 

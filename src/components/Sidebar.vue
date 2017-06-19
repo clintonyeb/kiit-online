@@ -22,7 +22,7 @@
     
             <v-list-item v-for="item in sidebar.items" :key="item">
                 <router-link :to="item.path">
-                    <v-list-tile :ripple="{ class: 'primary--text' }" :class="{'primary lighten-2 white--text': $route.name.search(item.name) !== -1 }">
+                    <v-list-tile :ripple="true" :class="{'primary lighten-2 white--text': $route.name.search(item.name) !== -1 }">
                         <v-list-tile-action>
                             <v-icon :class="{'white--text': $route.name == item.name}">{{ item.icon }}</v-icon>
                         </v-list-tile-action>
