@@ -44,7 +44,7 @@ const mutations = {
     state.loading = bool;
   },
   SET_TIME(state, id) {
-    for (let i = 0; i < state.messages.length; i++) {
+    for (let i = 0; i < state.messages.length; i += 1) {
       const mess = state.messages[i];
       if (mess.id && mess.id === id) {
         mess.time = new Date().getTime();
